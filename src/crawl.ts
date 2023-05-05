@@ -45,7 +45,7 @@ export async function crawl({
   DELAY_EACH_TWEET_SECONDS?: number;
 }) {
   // change spaces to _
-  const FOLDER_DESTINATION = "./output";
+  const FOLDER_DESTINATION = "./tweets-data";
   const FILE_NAME =
     `${FOLDER_DESTINATION}/${SEARCH_KEYWORDS} ${NOW}.csv`.replace(/ /g, "_");
   console.info(chalk.blue("\nOpening twitter search page...\n"));
