@@ -6,7 +6,6 @@ import { config } from "dotenv";
 
 config();
 
-const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 const SEARCH_KEYWORDS = "kucing";
 const SEARCH_LIMIT = 500;
 
@@ -32,7 +31,7 @@ const filteredFields = [
   "media_type",
 ];
 
-(async () => {
+export async function crawl({ access_token }: { access_token: string }) {
   const browser = await chromium.launch({
     headless: false,
   });
@@ -42,7 +41,7 @@ const filteredFields = [
       cookies: [
         {
           name: "auth_token",
-          value: ACCESS_TOKEN,
+          value: access_token,
           domain: "twitter.com",
           path: "/",
           expires: -1,
@@ -69,8 +68,11 @@ const filteredFields = [
   });
 
   // await page.goto("https://twitter.com/search-advanced");
+  console.info("Opening twitter search page...");
   await page.goto("https://twitter.com/search-advanced?f=live");
   await page.click('input[name="allOfTheseWords"]');
+
+  console.info(`Filling in keywords: ${SEARCH_KEYWORDS}`);
   await page.fill('input[name="allOfTheseWords"]', SEARCH_KEYWORDS);
 
   if (SEARCH_FROM_DATE) {
@@ -173,6 +175,10 @@ const filteredFields = [
         const keywords = SEARCH_KEYWORDS; // replace with actual keywords
         const filename = `./output/${keywords} ${now}.csv`;
 
+        if (!fs.existsSync(filename)) {
+          fs.mkdirSync("./output", { recursive: true });
+        }
+
         const headerRow = filteredFields.join(";") + "\n";
 
         if (allData.tweets.length === 0) {
@@ -205,6 +211,10 @@ const filteredFields = [
           additionalTweetsCount = 0;
           console.info("Taking a break, waiting for 5 seconds...");
           await page.waitForTimeout(5000);
+        } else if (additionalTweetsCount > 20) {
+          // for every multiple of 20, wait for 2 seconds
+          console.info("Taking a break, waiting for 2 seconds...");
+          await page.waitForTimeout(2000);
         }
       } else {
         console.info("Timed out waiting for response");
@@ -233,4 +243,4 @@ const filteredFields = [
   await scrollAndSave();
 
   console.info("Done scrolling...");
-})();
+}
