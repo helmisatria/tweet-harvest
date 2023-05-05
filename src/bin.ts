@@ -47,6 +47,12 @@ async function run() {
         describe: "Limit number of tweets to crawl",
         type: "number",
       },
+      delay: {
+        alias: "d",
+        describe: "Delay between each tweet (in seconds)",
+        type: "number",
+        default: 3,
+      },
     })
     .help()
     .alias("help", "h").argv;
@@ -112,6 +118,7 @@ async function run() {
       SEARCH_FROM_DATE: argv.from,
       SEARCH_TO_DATE: argv.to,
       TARGET_TWEET_COUNT: argv.limit,
+      DELAY_EACH_TWEET_SECONDS: argv.delay_each_tweet,
     });
   } catch (err) {
     console.error("Error running script:", err);

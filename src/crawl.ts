@@ -34,12 +34,15 @@ export async function crawl({
   SEARCH_FROM_DATE,
   SEARCH_TO_DATE,
   TARGET_TWEET_COUNT,
+  // default delay each tweet activity: 3 seconds
+  DELAY_EACH_TWEET_SECONDS = 3,
 }: {
   ACCESS_TOKEN: string;
   SEARCH_KEYWORDS?: string;
   SEARCH_FROM_DATE?: string;
   SEARCH_TO_DATE?: string;
   TARGET_TWEET_COUNT?: number;
+  DELAY_EACH_TWEET_SECONDS?: number;
 }) {
   // change spaces to _
   const FOLDER_DESTINATION = "./output";
@@ -52,6 +55,10 @@ export async function crawl({
   });
 
   const context = await browser.newContext({
+    screen: {
+      width: 1920,
+      height: 1080,
+    },
     storageState: {
       cookies: [
         {
@@ -177,15 +184,6 @@ export async function crawl({
           }
         }
 
-        const tweetCreatedAt = Object.values(tweets)?.[0]?.["created_at"];
-        if (!tweetCreatedAt) {
-          console.info("No tweet created_at found");
-          console.warn("tweets -->", tweets);
-          return;
-        }
-
-        lastTweetCreatedAt = tweetCreatedAt;
-
         // console.info("tweet posted at -->", tweetCreatedAt);
 
         lastScrollId =
@@ -241,31 +239,91 @@ export async function crawl({
         // for every multiple of 100, wait for 5 seconds
         if (additionalTweetsCount > 100) {
           additionalTweetsCount = 0;
-          console.info("Taking a break, waiting for 10 seconds...");
+          console.info(
+            chalk.gray("\n--Taking a break, waiting for 10 seconds...")
+          );
           await page.waitForTimeout(10_000);
         } else if (additionalTweetsCount > 20) {
           // for every multiple of 20, wait for 3 seconds
           // console.info("Taking a break, waiting for 3 seconds...");
-          await page.waitForTimeout(3_000);
+          await page.waitForTimeout(DELAY_EACH_TWEET_SECONDS * 1000);
         }
       } else {
-        console.info("Timed out waiting for response");
         timeoutCount++;
-        if (timeoutCount > 3) {
+        if (timeoutCount === 1) {
+          console.info(chalk.gray("No additional tweet, scrolling more..."));
+        } else {
           console.info(
-            "Timed out waiting for response too many times, clicking last tweet and going back"
+            chalk.gray("Still no additional tweet, scrolling more...")
           );
+        }
 
-          const lastTweet = await page.$(
+        let lastTweet;
+
+        const findLastTweet = async () => {
+          lastTweet = await page.$(
             "article[data-testid='tweet']:last-child div[data-testid='tweetText'] span"
           );
 
-          await lastTweet.click();
-          await page.goBack();
-          await page.waitForURL("https://twitter.com/search**");
-          await scrollAndSave(); // call the function again to resume scrolling
-          break;
+          if (!lastTweet) {
+            await page.evaluate(() => {
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            });
+
+            await page.waitForTimeout(1_000);
+          }
+
+          await page.evaluate(() => {
+            const lastTweet = document.querySelector(
+              "article[data-testid='tweet']:last-child"
+            );
+
+            lastTweet.scrollIntoView({ behavior: "smooth" });
+          });
+
+          await page.waitForTimeout(1_000);
+          return lastTweet;
+        };
+
+        const clickLastTweet = async () => {
+          await findLastTweet();
+          await lastTweet.click({ timeout: 1_000 }).catch(async () => {
+            await page.evaluate(() => {
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            });
+
+            await clickLastTweet();
+          });
+        };
+
+        if (!lastTweet) {
+          console.info(chalk.gray("Still looking for the tweets..."));
+          await findLastTweet();
+          await page.waitForTimeout(1_000);
         }
+
+        await clickLastTweet();
+
+        await page.goBack();
+        await page.waitForURL("https://twitter.com/search**");
+
+        // scroll to the last tweet
+        await page.evaluate(() => {
+          const lastTweet = document.querySelector(
+            "article[data-testid='tweet']:last-child"
+          );
+
+          console.log("lastTweet", lastTweet?.textContent);
+        });
+
+        await scrollAndSave(); // call the function again to resume scrolling
+        break;
       }
 
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
