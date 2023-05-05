@@ -3,15 +3,12 @@ import * as fs from "fs";
 import dayjs from "dayjs";
 import { pick } from "lodash";
 import { config } from "dotenv";
+import chalk from "chalk";
+import path from "path";
 
 config();
 
-const SEARCH_KEYWORDS = "kucing";
-const SEARCH_LIMIT = 500;
-
-// Date format: DD-MM-YYYY
-const SEARCH_FROM_DATE = "01-01-2023";
-const SEARCH_TO_DATE = "02-01-2023";
+const NOW = dayjs().format("DD-MM-YYYY HH:mm:ss");
 
 const filteredFields = [
   "created_at",
@@ -31,7 +28,25 @@ const filteredFields = [
   "media_type",
 ];
 
-export async function crawl({ access_token }: { access_token: string }) {
+export async function crawl({
+  ACCESS_TOKEN,
+  SEARCH_KEYWORDS,
+  SEARCH_FROM_DATE,
+  SEARCH_TO_DATE,
+  TARGET_TWEET_COUNT,
+}: {
+  ACCESS_TOKEN: string;
+  SEARCH_KEYWORDS?: string;
+  SEARCH_FROM_DATE?: string;
+  SEARCH_TO_DATE?: string;
+  TARGET_TWEET_COUNT?: number;
+}) {
+  // change spaces to _
+  const FOLDER_DESTINATION = "./output";
+  const FILE_NAME =
+    `${FOLDER_DESTINATION}/${SEARCH_KEYWORDS} ${NOW}.csv`.replace(/ /g, "_");
+  console.info(chalk.blue("\nOpening twitter search page...\n"));
+
   const browser = await chromium.launch({
     headless: false,
   });
@@ -41,7 +56,7 @@ export async function crawl({ access_token }: { access_token: string }) {
       cookies: [
         {
           name: "auth_token",
-          value: access_token,
+          value: ACCESS_TOKEN,
           domain: "twitter.com",
           path: "/",
           expires: -1,
@@ -61,15 +76,25 @@ export async function crawl({ access_token }: { access_token: string }) {
     const url = route.request().url();
     // only log requests that includes adaptive.json
     if (url.includes("adaptive.json")) {
-      console.info("Fetching tweets...");
+      console.info(chalk.blue(`\nGot some tweets, saving to file...`));
     }
 
     route.continue();
   });
 
   // await page.goto("https://twitter.com/search-advanced");
-  console.info("Opening twitter search page...");
-  await page.goto("https://twitter.com/search-advanced?f=live");
+  await page.goto("https://twitter.com/search-advanced?f=live", {
+    waitUntil: "networkidle",
+  });
+
+  // check is current page url is twitter login page (have /login in the url)
+  const isLoggedIn = !page.url().includes("/login");
+
+  if (!isLoggedIn) {
+    console.error("Invalid twitter auth token. Please check your auth token");
+    return browser.close();
+  }
+
   await page.click('input[name="allOfTheseWords"]');
 
   console.info(`Filling in keywords: ${SEARCH_KEYWORDS}`);
@@ -82,7 +107,8 @@ export async function crawl({ access_token }: { access_token: string }) {
     const daySelect = selects[1];
     const yearSelect = selects[2];
 
-    const [day, month, year] = SEARCH_FROM_DATE.split("-");
+    // expect value to be in this format: 2023-01-01 00:00:00
+    const [day, month, year] = SEARCH_FROM_DATE.split(" ")[0].split("-");
     const monthName = dayjs()
       .month(parseInt(month) - 1)
       .format("MMMM");
@@ -100,7 +126,8 @@ export async function crawl({ access_token }: { access_token: string }) {
     const daySelectTo = selectsTo[1];
     const yearSelectTo = selectsTo[2];
 
-    const [day, month, year] = SEARCH_TO_DATE.split("-");
+    // expect value to be in this format: 2023-01-01 00:00:00
+    const [day, month, year] = SEARCH_TO_DATE.split(" ")[0].split("-");
     // month is still number, not string. convert it first to month name
     const monthName = dayjs()
       .month(parseInt(month) - 1)
@@ -114,7 +141,6 @@ export async function crawl({ access_token }: { access_token: string }) {
   // Press Enter
   await page.press('input[name="allOfTheseWords"]', "Enter");
 
-  const now = dayjs().format("DD-MM-YYYY HH:mm:ss");
   let timeoutCount = 0;
   let lastScrollId;
   let lastTweetCreatedAt;
@@ -128,7 +154,7 @@ export async function crawl({ access_token }: { access_token: string }) {
   async function scrollAndSave() {
     timeoutCount = 0;
 
-    while (allData.tweets.length < SEARCH_LIMIT) {
+    while (allData.tweets.length < TARGET_TWEET_COUNT) {
       // Wait for the next response or 10 seconds, whichever comes first
       const response = await Promise.race([
         page.waitForResponse((response) =>
@@ -160,7 +186,7 @@ export async function crawl({ access_token }: { access_token: string }) {
 
         lastTweetCreatedAt = tweetCreatedAt;
 
-        console.info("tweet posted at -->", tweetCreatedAt);
+        // console.info("tweet posted at -->", tweetCreatedAt);
 
         lastScrollId =
           responseBody?.timeline?.instructions?.[1]?.replaceEntry?.entry
@@ -172,17 +198,18 @@ export async function crawl({ access_token }: { access_token: string }) {
 
         // write tweets to CSV file
         const comingTweets = Object.values(tweets);
-        const keywords = SEARCH_KEYWORDS; // replace with actual keywords
-        const filename = `./output/${keywords} ${now}.csv`;
 
-        if (!fs.existsSync(filename)) {
-          fs.mkdirSync("./output", { recursive: true });
+        if (!fs.existsSync(FOLDER_DESTINATION)) {
+          const dir = fs.mkdirSync(FOLDER_DESTINATION, { recursive: true });
+          const dirFullPath = path.resolve(dir);
+
+          console.info(chalk.green(`Created new directory: ${dirFullPath}`));
         }
 
         const headerRow = filteredFields.join(";") + "\n";
 
         if (allData.tweets.length === 0) {
-          fs.appendFileSync(filename, headerRow);
+          fs.appendFileSync(FILE_NAME, headerRow);
         }
 
         const rows = comingTweets.reduce((prev: [], current: any) => {
@@ -200,21 +227,26 @@ export async function crawl({ access_token }: { access_token: string }) {
         }, []);
 
         const csv = (rows as []).join("\n") + "\n";
-        fs.appendFileSync(filename, csv);
+        fs.appendFileSync(FILE_NAME, csv);
+
+        const fullPathFilename = fs.realpathSync(FILE_NAME);
+        console.info(chalk.blue(`Your tweets saved to: ${fullPathFilename}`));
 
         // progress:
-        console.info("Progress data tweets: -->", allData.tweets.length);
+        console.info(
+          chalk.yellow(`Total tweets saved: ${allData.tweets.length}`)
+        );
         additionalTweetsCount += comingTweets.length;
 
         // for every multiple of 100, wait for 5 seconds
         if (additionalTweetsCount > 100) {
           additionalTweetsCount = 0;
-          console.info("Taking a break, waiting for 5 seconds...");
-          await page.waitForTimeout(5000);
+          console.info("Taking a break, waiting for 10 seconds...");
+          await page.waitForTimeout(10_000);
         } else if (additionalTweetsCount > 20) {
-          // for every multiple of 20, wait for 2 seconds
-          console.info("Taking a break, waiting for 2 seconds...");
-          await page.waitForTimeout(2000);
+          // for every multiple of 20, wait for 3 seconds
+          // console.info("Taking a break, waiting for 3 seconds...");
+          await page.waitForTimeout(3_000);
         }
       } else {
         console.info("Timed out waiting for response");
@@ -243,4 +275,5 @@ export async function crawl({ access_token }: { access_token: string }) {
   await scrollAndSave();
 
   console.info("Done scrolling...");
+  await browser.close();
 }

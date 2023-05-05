@@ -1,7 +1,7 @@
 {
   "name": "tweet-harvest",
   "description": "A Twitter crawler helper with auth",
-  "version": "0.0.10",
+  "version": "0.0.14",
   "license": "MIT",
   "author": "Helmi Satria",
   "files": [
@@ -9,6 +9,7 @@
   ],
   "dependencies": {
     "@inquirer/prompts": "^1.0.1",
+    "chalk": "^4.1.2",
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "inquirer": "^9.2.1",
@@ -24,6 +25,7 @@
     "@types/json2csv": "^5.0.3",
     "@types/lodash": "^4.14.194",
     "@types/prompts": "^2.4.4",
+    "@types/yargs": "^17.0.24",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0"
   },
