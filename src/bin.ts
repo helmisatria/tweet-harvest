@@ -21,6 +21,15 @@ async function run() {
       type: "password",
       name: "auth_token",
       message: `What's your Twitter auth token?`,
+      validate: (value) => {
+        if (value.length < 1) {
+          return "Please enter your Twitter auth token";
+        } else if (value.length < 30) {
+          return "Please enter a valid Twitter auth token";
+        }
+
+        return true;
+      },
     },
   ];
 
