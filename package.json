@@ -10,26 +10,21 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/helmisatria/tweet-harvest.git"
-  }, 
+  },
   "files": [
     "dist/"
   ],
   "dependencies": {
-    "@inquirer/prompts": "^1.0.1",
     "chalk": "^4.1.2",
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
-    "inquirer": "^9.2.1",
     "lodash": "^4.17.21",
     "playwright-chromium": "^1.33.0",
     "prompts": "^2.4.2",
-    "tiny-invariant": "^1.3.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.33.0",
-    "@types/inquirer": "^9.0.3",
-    "@types/json2csv": "^5.0.3",
     "@types/lodash": "^4.14.194",
     "@types/prompts": "^2.4.4",
     "@types/yargs": "^17.0.24",
