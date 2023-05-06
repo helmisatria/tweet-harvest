@@ -29,6 +29,7 @@
     "@types/lodash": "^4.14.194",
     "@types/prompts": "^2.4.4",
     "@types/yargs": "^17.0.24",
+    "pkg": "^5.8.1",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0"
   },
