@@ -8,12 +8,16 @@ import path from "path";
 
 config();
 
-const NOW = dayjs().format("DD-MM-YYYY HH:mm:ss");
+const NOW = dayjs().format("DD-MM-YYYY HH-mm-ss");
 
 function appendCsv(pathStr: string, contents: any, cb?) {
   const dirName = path.dirname(pathStr);
+  const fileName = path.resolve(pathStr);
+
   fs.mkdirSync(dirName, { recursive: true });
-  fs.appendFileSync(pathStr, contents, cb);
+  fs.appendFileSync(fileName, contents, cb);
+
+  return fileName;
 }
 
 const filteredFields = [
@@ -199,7 +203,7 @@ export async function crawl({
         const headerRow = filteredFields.join(";") + "\n";
 
         if (allData.tweets.length === 0) {
-          fs.writeFileSync(FILE_NAME, headerRow);
+          appendCsv(FILE_NAME, headerRow);
         }
 
         // add tweets and users to allData
@@ -231,9 +235,8 @@ export async function crawl({
         }, []);
 
         const csv = (rows as []).join("\n") + "\n";
-        appendCsv(FILE_NAME, csv);
+        const fullPathFilename = appendCsv(FILE_NAME, csv);
 
-        const fullPathFilename = fs.realpathSync(FILE_NAME);
         console.info(chalk.blue(`Your tweets saved to: ${fullPathFilename}`));
 
         // progress:
@@ -265,30 +268,35 @@ export async function crawl({
         }
 
         const findLastTweet = async () => {
-          const lastTweet = await page.$(
-            "article[data-testid='tweet']:last-child div[data-testid='tweetText'] span"
-          );
+          let lastTweet: ElementHandle<SVGElement | HTMLElement>;
 
-          if (!lastTweet) {
-            await page.evaluate(() => {
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
+          while (!lastTweet) {
+            lastTweet = await page.$(
+              "article[data-testid='tweet']:last-child div[data-testid='tweetText'] span"
+            );
+
+            if (!lastTweet) {
+              await page.evaluate(() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
               });
+
+              await page.waitForTimeout(1_000);
+            }
+
+            await page.evaluate(() => {
+              const lastTweet = document.querySelector(
+                "article[data-testid='tweet']:last-child"
+              );
+
+              lastTweet?.scrollIntoView({ behavior: "smooth" });
             });
 
             await page.waitForTimeout(1_000);
           }
 
-          await page.evaluate(() => {
-            const lastTweet = document.querySelector(
-              "article[data-testid='tweet']:last-child"
-            );
-
-            lastTweet.scrollIntoView({ behavior: "smooth" });
-          });
-
-          await page.waitForTimeout(1_000);
           return lastTweet;
         };
 
@@ -340,6 +348,9 @@ export async function crawl({
 
   await scrollAndSave();
 
-  console.info("Done scrolling...");
+  console.info(
+    `Already got ${allData.tweets.length} tweets, done scrolling...`
+  );
+
   await browser.close();
 }
