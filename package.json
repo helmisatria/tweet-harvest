@@ -39,6 +39,6 @@
     "start": "ts-node src/crawl.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/crawl.ts",
     "build": "tsc",
-    "build:pkg": "pkg . --out-path dist/bin"
+    "build:pkg": "pkg . --out-path ./bin"
   }
 }
