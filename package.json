@@ -1,11 +1,12 @@
 {
   "name": "tweet-harvest",
   "description": "A Twitter crawler helper with auth",
-  "version": "0.0.21",
+  "version": "0.0.23",
   "license": "MIT",
   "author": "Helmi Satria",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "@helmisatria:registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
   "scripts": {
     "start": "ts-node src/crawl.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/crawl.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "build:pkg": "pkg . --out-path dist/bin"
   }
 }
