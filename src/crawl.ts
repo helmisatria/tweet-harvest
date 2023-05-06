@@ -14,7 +14,7 @@ const getDirName = path.dirname;
 
 function appendCsv(path: string, contents: any, cb?: any) {
   fs.mkdirSync(getDirName(path), { recursive: true });
-  return fs.appendFileSync(path, contents, cb);
+  return fs.appendFileSync(getDirName(path), contents, cb);
 }
 
 const filteredFields = [
