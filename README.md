@@ -12,11 +12,6 @@ To use Tweet Harvest, follow these simple steps:
 3. Type `npx tweet-harvest@latest` and press Enter.
 4. Follow the prompts to provide the data you want to search for on Twitter, such as keywords, dates, and other parameters.
 
-That’s it! Tweet Harvest will use your input to search Twitter for relevant tweets and save the results in a CSV file in the `tweets-data` directory.
+That’s it! Tweet Harvest will open a Chromium browser instance and navigate to Twitter's search page. It will then enter your search parameters and scrape the resulting tweets. The tweets will be saved in a CSV file in a directory named tweets-data in the current working directory.
 
 Note: You will need a Twitter auth token to use this tool. When prompted, enter your Twitter auth token to authenticate your search.
-
-## How it Works
-
-When you run Tweet Harvest, it will open a Chromium browser instance and navigate to Twitter's search page. It will then enter your search parameters and scrape the resulting tweets. The tweets will be saved in a CSV file in a directory named `tweets-data` in the current working directory.
-
