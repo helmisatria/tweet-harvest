@@ -5,7 +5,8 @@
   "license": "MIT",
   "author": "Helmi Satria",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "@helmisatria:registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",
