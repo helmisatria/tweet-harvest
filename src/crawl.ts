@@ -1,4 +1,4 @@
-import { chromium } from "playwright-chromium";
+import { ElementHandle, chromium } from "playwright-chromium";
 import * as fs from "fs";
 import dayjs from "dayjs";
 import { pick } from "lodash";
@@ -10,11 +10,10 @@ config();
 
 const NOW = dayjs().format("DD-MM-YYYY HH:mm:ss");
 
-const getDirName = path.dirname;
-
-function appendCsv(path: string, contents: any, cb?: any) {
-  fs.mkdirSync(getDirName(path), { recursive: true });
-  return fs.appendFileSync(getDirName(path), contents, cb);
+function appendCsv(pathStr: string, contents: any, cb?) {
+  const dirName = path.dirname(pathStr);
+  fs.mkdirSync(dirName, { recursive: true });
+  fs.appendFileSync(pathStr, contents, cb);
 }
 
 const filteredFields = [
@@ -200,7 +199,7 @@ export async function crawl({
         const headerRow = filteredFields.join(";") + "\n";
 
         if (allData.tweets.length === 0) {
-          appendCsv(FILE_NAME, headerRow);
+          fs.writeFileSync(FILE_NAME, headerRow);
         }
 
         // add tweets and users to allData
@@ -265,10 +264,8 @@ export async function crawl({
           );
         }
 
-        let lastTweet;
-
         const findLastTweet = async () => {
-          lastTweet = await page.$(
+          const lastTweet = await page.$(
             "article[data-testid='tweet']:last-child div[data-testid='tweetText'] span"
           );
 
@@ -296,7 +293,7 @@ export async function crawl({
         };
 
         const clickLastTweet = async () => {
-          await findLastTweet();
+          const lastTweet = await findLastTweet();
           await lastTweet.click({ timeout: 1_000 }).catch(async () => {
             await page.evaluate(() => {
               window.scrollTo({
@@ -308,6 +305,10 @@ export async function crawl({
             await clickLastTweet();
           });
         };
+
+        const lastTweet = await page.$(
+          "article[data-testid='tweet']:last-child div[data-testid='tweetText'] span"
+        );
 
         if (!lastTweet) {
           console.info(chalk.gray("Still looking for the tweets..."));
