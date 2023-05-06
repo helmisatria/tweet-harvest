@@ -10,6 +10,13 @@ config();
 
 const NOW = dayjs().format("DD-MM-YYYY HH:mm:ss");
 
+const getDirName = path.dirname;
+
+function appendCsv(path: string, contents: any, cb?: any) {
+  fs.mkdirSync(getDirName(path), { recursive: true });
+  return fs.appendFileSync(path, contents, cb);
+}
+
 const filteredFields = [
   "created_at",
   "id",
@@ -190,6 +197,12 @@ export async function crawl({
           responseBody?.timeline?.instructions?.[1]?.replaceEntry?.entry
             ?.content?.operation?.cursor?.value;
 
+        const headerRow = filteredFields.join(";") + "\n";
+
+        if (allData.tweets.length === 0) {
+          appendCsv(FILE_NAME, headerRow);
+        }
+
         // add tweets and users to allData
         allData.tweets.push(...Object.values(tweets));
         allData.users.push(...Object.values(users));
@@ -202,12 +215,6 @@ export async function crawl({
           const dirFullPath = path.resolve(dir);
 
           console.info(chalk.green(`Created new directory: ${dirFullPath}`));
-        }
-
-        const headerRow = filteredFields.join(";") + "\n";
-
-        if (allData.tweets.length === 0) {
-          fs.appendFileSync(FILE_NAME, headerRow);
         }
 
         const rows = comingTweets.reduce((prev: [], current: any) => {
@@ -225,7 +232,7 @@ export async function crawl({
         }, []);
 
         const csv = (rows as []).join("\n") + "\n";
-        fs.appendFileSync(FILE_NAME, csv);
+        appendCsv(FILE_NAME, csv);
 
         const fullPathFilename = fs.realpathSync(FILE_NAME);
         console.info(chalk.blue(`Your tweets saved to: ${fullPathFilename}`));
