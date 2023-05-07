@@ -62,8 +62,10 @@ export async function crawl({
 }) {
   // change spaces to _
   const FOLDER_DESTINATION = "./tweets-data";
-  const FILE_NAME =
-    `${FOLDER_DESTINATION}/${SEARCH_KEYWORDS} ${NOW}.csv`.replace(/ /g, "_");
+  const FILE_NAME = `${FOLDER_DESTINATION}/${SEARCH_KEYWORDS} ${NOW}.csv`
+    .replace(/ /g, "_")
+    .replace(/:/g, "-");
+
   console.info(chalk.blue("\nOpening twitter search page...\n"));
 
   let TWEETS_NOT_FOUND_ON_LIVE_TAB = false;
