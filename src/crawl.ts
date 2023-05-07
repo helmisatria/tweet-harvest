@@ -36,11 +36,27 @@ const filteredFields = [
   "conversation_id_str",
   "media_url_https",
   "media_type",
+  "username",
 ];
 
 type StartCrawlTwitterParams = {
   twitterSearchUrl?: string;
 };
+
+async function retry(fn, retriesLeft = 5, interval = 2000) {
+  try {
+    return await fn();
+  } catch (error) {
+    if (retriesLeft) {
+      console.warn(`Retrying in ${interval / 1000} seconds...`);
+      await new Promise((resolve) => setTimeout(resolve, interval));
+      return retry(fn, retriesLeft - 1, interval);
+    } else {
+      console.error("Max retries exceeded.");
+      throw error;
+    }
+  }
+}
 
 export async function crawl({
   ACCESS_TOKEN,
@@ -126,14 +142,17 @@ export async function crawl({
       return browser.close();
     }
 
-    // add a catch, if element not found, then log the current full page elements
-    await page.click('input[name="allOfTheseWords"]').catch((err) => {
-      console.error("Error when clicking search input");
-      console.error(err);
-
-      console.error("Current page elements, send it to @helmisatria:");
-      console.error(page.locator("body").innerHTML());
+    // wait until it shown: h2 Advanced search
+    await page.waitForSelector("h2", {
+      state: "visible",
     });
+
+    // wait until it shown: input[name="allOfTheseWords"]
+    await page.waitForSelector('input[name="allOfTheseWords"]', {
+      state: "visible",
+    });
+
+    await page.click('input[name="allOfTheseWords"]');
 
     if (SEARCH_FROM_DATE) {
       const [day, month, year] = SEARCH_FROM_DATE.split(" ")[0].split("-");
@@ -227,6 +246,9 @@ export async function crawl({
             tweet["media_type"] = `"${
               current?.entities?.media?.[0]?.type ?? ""
             }"`;
+            tweet["username"] = allData.users.find(
+              (user) => user.id_str === tweet.user_id_str
+            )?.screen_name;
 
             const row = Object.values(tweet).join(";");
 
@@ -358,17 +380,34 @@ export async function crawl({
     }
   }
 
-  await startCrawlTwitter();
+  try {
+    await startCrawlTwitter();
 
-  if (TWEETS_NOT_FOUND_ON_LIVE_TAB && (SEARCH_FROM_DATE || SEARCH_TO_DATE)) {
-    console.info('No tweets found on "Latest" tab, trying "Top" tab...');
+    if (TWEETS_NOT_FOUND_ON_LIVE_TAB && (SEARCH_FROM_DATE || SEARCH_TO_DATE)) {
+      console.info('No tweets found on "Latest" tab, trying "Top" tab...');
 
-    await startCrawlTwitter({
-      twitterSearchUrl: "https://twitter.com/search-advanced",
+      await startCrawlTwitter({
+        twitterSearchUrl: "https://twitter.com/search-advanced",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    const errorFilename = `Error-${FILE_NAME}.png`
+      .replace(/ /g, "_")
+      .replace(".csv", "");
+
+    await page.screenshot({ path: path.resolve(errorFilename) }).then(() => {
+      console.log(
+        chalk.red(
+          `If you need help, please send this error screenshot to the maintainer, it was saved to "${path.resolve(
+            errorFilename
+          )}"`
+        )
+      );
     });
-  }
-
-  if (!DEBUG_MODE) {
-    await browser.close();
+  } finally {
+    if (!DEBUG_MODE) {
+      await browser.close();
+    }
   }
 }
