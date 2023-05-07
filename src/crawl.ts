@@ -60,6 +60,8 @@ export async function crawl({
   DELAY_EACH_TWEET_SECONDS?: number;
   DEBUG_MODE?: boolean;
 }) {
+  let MODIFIED_SEARCH_KEYWORDS = SEARCH_KEYWORDS;
+
   // change spaces to _
   const FOLDER_DESTINATION = "./tweets-data";
   const FILE_NAME = `${FOLDER_DESTINATION}/${SEARCH_KEYWORDS} ${NOW}.csv`
@@ -124,58 +126,36 @@ export async function crawl({
       return browser.close();
     }
 
-    // wait until allOfTheseWords input is visible
-    await page.waitForSelector('input[name="allOfTheseWords"]');
+    // add a catch, if element not found, then log the current full page elements
+    await page.click('input[name="allOfTheseWords"]').catch((err) => {
+      console.error("Error when clicking search input");
+      console.error(err);
 
-    await page.click('input[name="allOfTheseWords"]');
-
-    console.info(`Filling in keywords: ${SEARCH_KEYWORDS}`);
-    await page.fill('input[name="allOfTheseWords"]', SEARCH_KEYWORDS);
+      console.error("Current page elements, send it to @helmisatria:");
+      console.error(page.locator("body").innerHTML());
+    });
 
     if (SEARCH_FROM_DATE) {
-      await page.click('div[aria-label="From"]');
-      const selects = await page.$$('div[aria-label="From"] select');
-      const monthSelect = selects[0];
-      const daySelect = selects[1];
-      const yearSelect = selects[2];
-
-      // expect value to be in this format: 2023-01-01 00:00:00
       const [day, month, year] = SEARCH_FROM_DATE.split(" ")[0].split("-");
-      const monthName = dayjs()
-        .month(parseInt(month) - 1)
-        .format("MMMM");
-
-      await monthSelect.selectOption(monthName);
-      await daySelect.selectOption(Number(day).toString());
-      await yearSelect.selectOption(Number(year).toString());
+      MODIFIED_SEARCH_KEYWORDS += ` since:${year}-${month}-${day}`;
     }
 
     if (SEARCH_TO_DATE) {
-      await page.click('div[aria-label="To"]');
-      const selectsTo = await page.$$('div[aria-label="To"] select');
-
-      const monthSelectTo = selectsTo[0];
-      const daySelectTo = selectsTo[1];
-      const yearSelectTo = selectsTo[2];
-
-      // expect value to be in this format: 2023-01-01 00:00:00
       const [day, month, year] = SEARCH_TO_DATE.split(" ")[0].split("-");
-      // month is still number, not string. convert it first to month name
-      const monthName = dayjs()
-        .month(parseInt(month) - 1)
-        .format("MMMM");
-
-      await monthSelectTo.selectOption(monthName);
-      await daySelectTo.selectOption(Number(day).toString());
-      await yearSelectTo.selectOption(Number(year).toString());
+      MODIFIED_SEARCH_KEYWORDS += ` until:${year}-${month}-${day}`;
     }
+
+    console.info(
+      chalk.yellow(`\nFilling in keywords: ${MODIFIED_SEARCH_KEYWORDS}\n`)
+    );
+
+    await page.fill('input[name="allOfTheseWords"]', MODIFIED_SEARCH_KEYWORDS);
 
     // Press Enter
     await page.press('input[name="allOfTheseWords"]', "Enter");
 
     let timeoutCount = 0;
     let lastScrollId;
-    let lastTweetCreatedAt;
     let additionalTweetsCount = 0;
 
     const allData = {
