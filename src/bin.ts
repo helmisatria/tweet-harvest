@@ -62,6 +62,7 @@ async function run() {
         type: "number",
         default: 3,
       },
+      debug: {},
     })
     .help()
     .alias("help", "h").argv;

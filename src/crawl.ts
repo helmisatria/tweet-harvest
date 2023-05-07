@@ -46,6 +46,7 @@ export async function crawl({
   TARGET_TWEET_COUNT,
   // default delay each tweet activity: 3 seconds
   DELAY_EACH_TWEET_SECONDS = 3,
+  DEBUG_MODE,
 }: {
   ACCESS_TOKEN: string;
   SEARCH_KEYWORDS?: string;
@@ -53,6 +54,7 @@ export async function crawl({
   SEARCH_TO_DATE?: string;
   TARGET_TWEET_COUNT?: number;
   DELAY_EACH_TWEET_SECONDS?: number;
+  DEBUG_MODE?: boolean;
 }) {
   // change spaces to _
   const FOLDER_DESTINATION = "./tweets-data";
@@ -111,6 +113,9 @@ export async function crawl({
     console.error("Invalid twitter auth token. Please check your auth token");
     return browser.close();
   }
+
+  // wait until allOfTheseWords input is visible
+  await page.waitForSelector('input[name="allOfTheseWords"]');
 
   await page.click('input[name="allOfTheseWords"]');
 
@@ -352,5 +357,7 @@ export async function crawl({
     `Already got ${allData.tweets.length} tweets, done scrolling...`
   );
 
-  await browser.close();
+  if (!DEBUG_MODE) {
+    await browser.close();
+  }
 }
