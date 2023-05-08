@@ -78,9 +78,7 @@ export async function crawl({
 }) {
   let MODIFIED_SEARCH_KEYWORDS = SEARCH_KEYWORDS;
 
-  const CURRENT_PACKAGE_VERSION = JSON.parse(
-    fs.readFileSync("./package.json", "utf8")
-  ).version;
+  const CURRENT_PACKAGE_VERSION = require("../package.json").version;
 
   // change spaces to _
   const FOLDER_DESTINATION = "./tweets-data";
@@ -147,10 +145,8 @@ export async function crawl({
       return browser.close();
     }
 
-    // wait until it shown: h2 Advanced search
-    await page.waitForSelector("h2", {
-      state: "visible",
-    });
+    // // wait until it shown: h2 Advanced search
+    // await page.waitForSelector("h2", { state: "visible" });
 
     // wait until it shown: input[name="allOfTheseWords"]
     await page.waitForSelector('input[name="allOfTheseWords"]', {
@@ -400,7 +396,7 @@ export async function crawl({
 
     const errorFilename =
       FUlL_PATH_FOLDER_DESTINATION +
-      `/Error-${FILE_NAME}.png`.replace(/ /g, "_").replace(".csv", "");
+      `/Error-${NOW}.png`.replace(/ /g, "_").replace(".csv", "");
 
     console.info(
       chalk.yellowBright("Twitter Harvest v", CURRENT_PACKAGE_VERSION)
