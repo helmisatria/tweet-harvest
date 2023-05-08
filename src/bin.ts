@@ -113,8 +113,8 @@ async function run() {
   try {
     // Run `npx playwright install` to install the Playwright dependencies
     const output = execSync("npx playwright --version").toString();
-    execSync("npm i @playwright/test");
-    execSync("npx playwright install chromium");
+    execSync("npm i @playwright/test", { stdio: "inherit" });
+    execSync("npx playwright install chromium", { stdio: "inherit" });
     if (!output.includes("Version")) {
       console.log(
         "Installing required playwright browser dependencies... Please wait, this will take a while"

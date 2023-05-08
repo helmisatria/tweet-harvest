@@ -78,8 +78,13 @@ export async function crawl({
 }) {
   let MODIFIED_SEARCH_KEYWORDS = SEARCH_KEYWORDS;
 
+  const CURRENT_PACKAGE_VERSION = JSON.parse(
+    fs.readFileSync("./package.json", "utf8")
+  ).version;
+
   // change spaces to _
   const FOLDER_DESTINATION = "./tweets-data";
+  const FUlL_PATH_FOLDER_DESTINATION = path.resolve(FOLDER_DESTINATION);
   const FILE_NAME = `${FOLDER_DESTINATION}/${SEARCH_KEYWORDS} ${NOW}.csv`
     .replace(/ /g, "_")
     .replace(/:/g, "-");
@@ -392,14 +397,19 @@ export async function crawl({
     }
   } catch (error) {
     console.error(error);
-    const errorFilename = `Error-${FILE_NAME}.png`
-      .replace(/ /g, "_")
-      .replace(".csv", "");
+
+    const errorFilename =
+      FUlL_PATH_FOLDER_DESTINATION +
+      `/Error-${FILE_NAME}.png`.replace(/ /g, "_").replace(".csv", "");
+
+    console.info(
+      chalk.yellowBright("Twitter Harvest v", CURRENT_PACKAGE_VERSION)
+    );
 
     await page.screenshot({ path: path.resolve(errorFilename) }).then(() => {
       console.log(
         chalk.red(
-          `If you need help, please send this error screenshot to the maintainer, it was saved to "${path.resolve(
+          `\nIf you need help, please send this error screenshot to the maintainer, it was saved to "${path.resolve(
             errorFilename
           )}"`
         )
