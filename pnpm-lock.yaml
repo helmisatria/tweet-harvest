@@ -17,8 +17,8 @@ dependencies:
     specifier: ^4.17.21
     version: 4.17.21
   playwright-chromium:
-    specifier: ^1.33.0
-    version: 1.33.0
+    specifier: ^1.34.0
+    version: 1.34.0
   prompts:
     specifier: ^2.4.2
     version: 2.4.2
@@ -821,19 +821,24 @@ packages:
       - supports-color
     dev: true
 
-  /playwright-chromium@1.33.0:
-    resolution: {integrity: sha512-aG2IqRp7Q6vRltZFT+N2stWwDUH2fEUTOTv8RxSKMK5QmIQQoNL9nJvNMIJ3yLuin8+coaa3mhJXjjUheo0+/A==}
+  /playwright-chromium@1.34.0:
+    resolution: {integrity: sha512-w3nNawEvAOD+HgrwzVWmlMZJ+B98ySf9OZ/R5MyXDaW4NELUb/sM1pTAx6ue8C9seY8CE6rw556VByRfLtwg5A==}
     engines: {node: '>=14'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      playwright-core: 1.33.0
+      playwright-core: 1.34.0
     dev: false
 
   /playwright-core@1.33.0:
     resolution: {integrity: sha512-aizyPE1Cj62vAECdph1iaMILpT0WUDCq3E6rW6I+dleSbBoGbktvJtzS6VHkZ4DKNEOG9qJpiom/ZxO+S15LAw==}
     engines: {node: '>=14'}
     hasBin: true
+    dev: false
+
+  /playwright-core@1.34.0:
+    resolution: {integrity: sha512-fMUY1+iR6kYbJF/EsOOqzBA99ZHXbw9sYPNjwA4X/oV0hVF/1aGlWYBGPVUEqxBkGANDKMziYoOdKGU5DIP5Gg==}
+    engines: {node: '>=14'}
     dev: false
 
   /prebuild-install@7.1.1:

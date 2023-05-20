@@ -1,7 +1,7 @@
 {
   "name": "tweet-harvest",
   "description": "A Twitter crawler helper with auth",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "license": "MIT",
   "author": "Helmi Satria",
   "publishConfig": {
@@ -21,7 +21,6 @@
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
-    "playwright-chromium": "^1.33.0",
     "prompts": "^2.4.2",
     "yargs": "^17.7.2"
   },

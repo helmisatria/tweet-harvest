@@ -1,4 +1,4 @@
-import { ElementHandle, chromium } from "playwright-chromium";
+import { ElementHandle, chromium } from "@playwright/test";
 import * as fs from "fs";
 import dayjs from "dayjs";
 import { pick } from "lodash";
