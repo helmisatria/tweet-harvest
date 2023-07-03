@@ -49,6 +49,11 @@ async function run() {
         default: 3,
       },
       debug: {},
+      output_filename: {
+        alias: "o",
+        describe: "Output filename",
+        type: "string",
+      },
     })
     .help()
     .alias("help", "h").argv;
