@@ -84,7 +84,9 @@ export async function crawl({
 
   let TWEETS_NOT_FOUND_ON_LIVE_TAB = false;
 
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({
+    headless: false,
+  });
 
   const context = await browser.newContext({
     screen: { width: 1920, height: 1080 },
@@ -106,6 +108,8 @@ export async function crawl({
   });
 
   const page = await context.newPage();
+
+  page.setDefaultTimeout(60 * 1000);
 
   // Listen to network requests
   await page.route("**/*", (route) => {
@@ -205,9 +209,14 @@ export async function crawl({
               if (!tweet.content?.itemContent) return null;
               if (isPromotedTweet) return null;
 
+              const result = tweet.content.itemContent.tweet_results.result;
+              const tweetContent = result.legacy || result.tweet.legacy;
+              const userContent =
+                result.core.user_results.result.legacy || result.tweet.core.user_results.result.legacy;
+
               return {
-                tweet: tweet.content.itemContent.tweet_results.result.legacy,
-                user: tweet.content.itemContent.tweet_results.result.core.user_results.result.legacy,
+                tweet: tweetContent,
+                user: userContent,
               };
             })
             .filter((tweet) => tweet !== null);

@@ -6,7 +6,7 @@ config();
 
 crawl({
   ACCESS_TOKEN: process.env.DEV_ACCESS_TOKEN,
-  SEARCH_KEYWORDS: `"presiden"`,
+  SEARCH_KEYWORDS: `"jokowi"`,
   TARGET_TWEET_COUNT: 40,
   OUTPUT_FILENAME: "presiden.csv",
   DELAY_EACH_TWEET_SECONDS: 1,

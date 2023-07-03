@@ -1,3 +1,53 @@
+interface TweetContent {
+  __typename: string;
+  rest_id: string;
+  core: {
+    user_results: {
+      result: User;
+    };
+  };
+  edit_control: {
+    edit_tweet_ids: string[];
+    editable_until_msecs: string;
+    is_edit_eligible: boolean;
+    edits_remaining: string;
+  };
+  edit_perspective: {
+    favorited: boolean;
+    retweeted: boolean;
+  };
+  is_translatable: boolean;
+  views: {
+    count: string;
+    state: string;
+  };
+  source: string;
+  legacy: {
+    bookmark_count: number;
+    bookmarked: boolean;
+    created_at: string;
+    conversation_id_str: string;
+    display_text_range: number[];
+    entities: {
+      user_mentions: any[];
+      urls: any[];
+      hashtags: any[];
+      symbols: any[];
+    };
+    favorite_count: number;
+    favorited: boolean;
+    full_text: string;
+    is_quote_status: boolean;
+    lang: string;
+    quote_count: number;
+    reply_count: number;
+    retweet_count: number;
+    retweeted: boolean;
+    user_id_str: string;
+    id_str: string;
+  };
+}
+
 export interface User {
   __typename: string;
   id: string;
@@ -68,54 +118,8 @@ export interface Entry {
       itemType: string;
       __typename: string;
       tweet_results: {
-        result: {
-          __typename: string;
-          rest_id: string;
-          core: {
-            user_results: {
-              result: User;
-            };
-          };
-          edit_control: {
-            edit_tweet_ids: string[];
-            editable_until_msecs: string;
-            is_edit_eligible: boolean;
-            edits_remaining: string;
-          };
-          edit_perspective: {
-            favorited: boolean;
-            retweeted: boolean;
-          };
-          is_translatable: boolean;
-          views: {
-            count: string;
-            state: string;
-          };
-          source: string;
-          legacy: {
-            bookmark_count: number;
-            bookmarked: boolean;
-            created_at: string;
-            conversation_id_str: string;
-            display_text_range: number[];
-            entities: {
-              user_mentions: any[];
-              urls: any[];
-              hashtags: any[];
-              symbols: any[];
-            };
-            favorite_count: number;
-            favorited: boolean;
-            full_text: string;
-            is_quote_status: boolean;
-            lang: string;
-            quote_count: number;
-            reply_count: number;
-            retweet_count: number;
-            retweeted: boolean;
-            user_id_str: string;
-            id_str: string;
-          };
+        result: TweetContent & {
+          tweet?: TweetContent;
         };
       };
       tweetDisplayType: string;
