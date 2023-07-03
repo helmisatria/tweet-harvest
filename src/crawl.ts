@@ -194,13 +194,9 @@ export async function crawl({
             data: TweetResponseData;
           };
 
-          console.log("responseBody -->", responseBody);
-
           const tweets =
             responseBody.search_by_raw_query.search_timeline.timeline
               .instructions[0].entries;
-
-          console.log("tweets -->", tweets);
 
           if (!tweets.length) {
             // found text "not found" on the page
@@ -219,8 +215,6 @@ export async function crawl({
 
           const tweetContents = tweets
             .map((tweet) => {
-              console.log(tweet);
-
               const isPromotedTweet = tweet.entryId.includes("promoted");
 
               if (!tweet.content?.itemContent) return null;
