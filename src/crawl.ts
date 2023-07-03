@@ -11,6 +11,7 @@ import stealth from "puppeteer-extra-plugin-stealth";
 chromium.use(stealth());
 
 const NOW = dayjs().format("DD-MM-YYYY HH-mm-ss");
+let headerWritten = false;
 
 function appendCsv(pathStr: string, contents: any, cb?) {
   const dirName = path.dirname(pathStr);
@@ -73,6 +74,13 @@ export async function crawl({
   const FILE_NAME = `${FOLDER_DESTINATION}/${filename}.csv`.replace(/ /g, "_").replace(/:/g, "-");
 
   console.info(chalk.blue("\nOpening twitter search page...\n"));
+
+  if (fs.existsSync(FILE_NAME)) {
+    console.info(
+      chalk.blue(`\nFound existing file ${FILE_NAME}, renaming to ${FILE_NAME.replace(".csv", ".old.csv")}`)
+    );
+    fs.renameSync(FILE_NAME, FILE_NAME.replace(".csv", ".old.csv"));
+  }
 
   let TWEETS_NOT_FOUND_ON_LIVE_TAB = false;
 
@@ -169,7 +177,12 @@ export async function crawl({
 
           const tweets = responseBody.search_by_raw_query.search_timeline.timeline?.instructions?.[0]?.entries;
 
-          if (!tweets?.length) {
+          if (!tweets) {
+            console.error("No more tweets found, please check your search criteria and csv file result");
+            return;
+          }
+
+          if (!tweets.length) {
             // found text "not found" on the page
             if (await page.getByText("No results for").count()) {
               TWEETS_NOT_FOUND_ON_LIVE_TAB = true;
@@ -180,7 +193,8 @@ export async function crawl({
 
           const headerRow = filteredFields.join(";") + "\n";
 
-          if (allData.tweets.length === 0) {
+          if (!headerWritten) {
+            headerWritten = true;
             appendCsv(FILE_NAME, headerRow);
           }
 
@@ -247,9 +261,9 @@ export async function crawl({
         } else {
           timeoutCount++;
           if (timeoutCount === 1) {
-            console.info(chalk.gray("No additional tweet, scrolling more..."));
+            console.info(chalk.gray("Scrolling more..."));
           } else {
-            console.info(chalk.gray("Still no additional tweet, scrolling more..."));
+            console.info(chalk.gray("Still scrolling more..."));
           }
 
           const findLastTweet = async () => {
@@ -260,19 +274,11 @@ export async function crawl({
 
               if (!lastTweet) {
                 await page.evaluate(() => {
-                  window.scrollTo(0, document.body.scrollHeight);
+                  window.scrollTo(0, 9_000 * 9999);
                 });
 
                 await page.waitForTimeout(1_000);
               }
-
-              await page.evaluate(() => {
-                const lastTweet = document.querySelector("article[data-testid='tweet']:last-child");
-
-                lastTweet?.scrollIntoView({ behavior: "smooth" });
-              });
-
-              await page.waitForTimeout(1_000);
             }
 
             return lastTweet;
