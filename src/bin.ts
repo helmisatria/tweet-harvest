@@ -16,26 +16,16 @@ async function run() {
   );
   console.log("Note: This script only runs on your local device.\n");
 
-  const questions: prompts.PromptObject[] = [
-    {
-      type: "password",
-      name: "auth_token",
-      message: `What's your Twitter auth token?`,
-      validate: (value) => {
-        if (value.length < 1) {
-          return "Please enter your Twitter auth token";
-        } else if (value.length < 30) {
-          return "Please enter a valid Twitter auth token";
-        }
-
-        return true;
-      },
-    },
-  ];
+  const questions: prompts.PromptObject[] = [];
 
   const argv: any = yargs
     .usage("Usage: $0 [options]")
     .options({
+      token: {
+        alias: "t",
+        describe: "Twitter auth token",
+        type: "string",
+      },
       from: {
         alias: "f",
         describe: "From date (DD-MM-YYYY)",
@@ -66,6 +56,23 @@ async function run() {
     })
     .help()
     .alias("help", "h").argv;
+
+  if (!argv.token) {
+    questions.push({
+      type: "password",
+      name: "auth_token",
+      message: `What's your Twitter auth token?`,
+      validate: (value) => {
+        if (value.length < 1) {
+          return "Please enter your Twitter auth token";
+        } else if (value.length < 30) {
+          return "Please enter a valid Twitter auth token";
+        }
+
+        return true;
+      },
+    });
+  }
 
   if (!argv.search_keyword) {
     questions.push({
@@ -102,6 +109,10 @@ async function run() {
     },
   });
 
+  if (!argv.token) {
+    argv.token = answers.auth_token;
+  }
+
   if (!argv.search_keyword) {
     argv.search_keyword = answers.search_keyword;
   }
@@ -123,12 +134,13 @@ async function run() {
 
     // Call the `crawl` function with the access token
     crawl({
-      ACCESS_TOKEN: answers.auth_token,
+      ACCESS_TOKEN: argv.token,
       SEARCH_KEYWORDS: argv.search_keyword,
       SEARCH_FROM_DATE: argv.from,
       SEARCH_TO_DATE: argv.to,
       TARGET_TWEET_COUNT: argv.limit,
       DELAY_EACH_TWEET_SECONDS: argv.delay_each_tweet,
+      OUTPUT_FILENAME: argv.output_filename,
     });
   } catch (err) {
     console.error("Error running script:", err);

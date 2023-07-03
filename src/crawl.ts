@@ -2,7 +2,6 @@ import { ElementHandle } from "@playwright/test";
 import * as fs from "fs";
 import dayjs from "dayjs";
 import { pick } from "lodash";
-import { config } from "dotenv";
 import chalk from "chalk";
 import path from "path";
 import { TweetResponseData } from "./types/response-tweet";
@@ -10,8 +9,6 @@ import { chromium } from "playwright-extra";
 import stealth from "puppeteer-extra-plugin-stealth";
 
 chromium.use(stealth());
-
-config();
 
 const NOW = dayjs().format("DD-MM-YYYY HH-mm-ss");
 
@@ -37,26 +34,12 @@ const filteredFields = [
   "user_id_str",
   "conversation_id_str",
   "username",
+  "tweet_url",
 ];
 
 type StartCrawlTwitterParams = {
   twitterSearchUrl?: string;
 };
-
-async function retry(fn, retriesLeft = 5, interval = 2000) {
-  try {
-    return await fn();
-  } catch (error) {
-    if (retriesLeft) {
-      console.warn(`Retrying in ${interval / 1000} seconds...`);
-      await new Promise((resolve) => setTimeout(resolve, interval));
-      return retry(fn, retriesLeft - 1, interval);
-    } else {
-      console.error("Max retries exceeded.");
-      throw error;
-    }
-  }
-}
 
 export async function crawl({
   ACCESS_TOKEN,
@@ -67,6 +50,7 @@ export async function crawl({
   // default delay each tweet activity: 3 seconds
   DELAY_EACH_TWEET_SECONDS = 3,
   DEBUG_MODE,
+  OUTPUT_FILENAME,
 }: {
   ACCESS_TOKEN: string;
   SEARCH_KEYWORDS?: string;
@@ -75,6 +59,7 @@ export async function crawl({
   TARGET_TWEET_COUNT?: number;
   DELAY_EACH_TWEET_SECONDS?: number;
   DEBUG_MODE?: boolean;
+  OUTPUT_FILENAME?: string;
 }) {
   let MODIFIED_SEARCH_KEYWORDS = SEARCH_KEYWORDS;
 
@@ -83,9 +68,9 @@ export async function crawl({
   // change spaces to _
   const FOLDER_DESTINATION = "./tweets-data";
   const FUlL_PATH_FOLDER_DESTINATION = path.resolve(FOLDER_DESTINATION);
-  const FILE_NAME = `${FOLDER_DESTINATION}/${SEARCH_KEYWORDS} ${NOW}.csv`
-    .replace(/ /g, "_")
-    .replace(/:/g, "-");
+  const filename = (OUTPUT_FILENAME || `${SEARCH_KEYWORDS} ${NOW}`).trim().replace(".csv", "");
+
+  const FILE_NAME = `${FOLDER_DESTINATION}/${filename}.csv`.replace(/ /g, "_").replace(/:/g, "-");
 
   console.info(chalk.blue("\nOpening twitter search page...\n"));
 
@@ -128,9 +113,7 @@ export async function crawl({
   async function startCrawlTwitter({
     twitterSearchUrl = "https://twitter.com/search-advanced?f=live",
   }: StartCrawlTwitterParams = {}) {
-    await page.goto(twitterSearchUrl, {
-      waitUntil: "networkidle",
-    });
+    await page.goto(twitterSearchUrl);
 
     // check is current page url is twitter login page (have /login in the url)
     const isLoggedIn = !page.url().includes("/login");
@@ -139,9 +122,6 @@ export async function crawl({
       console.error("Invalid twitter auth token. Please check your auth token");
       return browser.close();
     }
-
-    // // wait until it shown: h2 Advanced search
-    // await page.waitForSelector("h2", { state: "visible" });
 
     // wait until it shown: input[name="allOfTheseWords"]
     await page.waitForSelector('input[name="allOfTheseWords"]', {
@@ -160,9 +140,7 @@ export async function crawl({
       MODIFIED_SEARCH_KEYWORDS += ` until:${year}-${month}-${day}`;
     }
 
-    console.info(
-      chalk.yellow(`\nFilling in keywords: ${MODIFIED_SEARCH_KEYWORDS}\n`)
-    );
+    console.info(chalk.yellow(`\nFilling in keywords: ${MODIFIED_SEARCH_KEYWORDS}\n`));
 
     await page.fill('input[name="allOfTheseWords"]', MODIFIED_SEARCH_KEYWORDS);
 
@@ -170,7 +148,6 @@ export async function crawl({
     await page.press('input[name="allOfTheseWords"]', "Enter");
 
     let timeoutCount = 0;
-    let lastScrollId;
     let additionalTweetsCount = 0;
 
     const allData = {
@@ -181,22 +158,16 @@ export async function crawl({
       timeoutCount = 0;
 
       while (allData.tweets.length < TARGET_TWEET_COUNT) {
-        // Wait for the next response or 10 seconds, whichever comes first
+        // Wait for the next response or 3 seconds, whichever comes first
         const response = await Promise.race([
-          page.waitForResponse((response) =>
-            response.url().includes("SearchTimeline")
-          ),
+          page.waitForResponse((response) => response.url().includes("SearchTimeline")),
           page.waitForTimeout(3000),
         ]);
 
         if (response) {
-          const { data: responseBody } = (await response.json()) as {
-            data: TweetResponseData;
-          };
+          const { data: responseBody } = (await response.json()) as { data: TweetResponseData };
 
-          const tweets =
-            responseBody.search_by_raw_query.search_timeline.timeline
-              .instructions[0].entries;
+          const tweets = responseBody.search_by_raw_query.search_timeline.timeline.instructions[0].entries;
 
           if (!tweets.length) {
             // found text "not found" on the page
@@ -222,8 +193,7 @@ export async function crawl({
 
               return {
                 tweet: tweet.content.itemContent.tweet_results.result.legacy,
-                user: tweet.content.itemContent.tweet_results.result.core
-                  .user_results.result.legacy,
+                user: tweet.content.itemContent.tweet_results.result.core.user_results.result.legacy,
               };
             })
             .filter((tweet) => tweet !== null);
@@ -241,28 +211,19 @@ export async function crawl({
             console.info(chalk.green(`Created new directory: ${dirFullPath}`));
           }
 
-          const rows = comingTweets.reduce(
-            (prev: [], current: (typeof tweetContents)[0]) => {
-              const tweet = pick(current.tweet, filteredFields);
+          const rows = comingTweets.reduce((prev: [], current: (typeof tweetContents)[0]) => {
+            const tweet = pick(current.tweet, filteredFields);
 
-              if (!tweet?.full_text) {
-                debugger;
-              }
+            const cleanTweetText = `"${tweet.full_text.replace(/;/g, " ").replace(/\n/g, " ")}"`;
 
-              tweet["full_text"] = `"${tweet.full_text.replace(/\n/g, "\\n")}"`;
-              // tweet["media_url_https"] =
-              //   `"${current?.entities?.media?.[0]?.media_url_https ?? ""}"` || "";
-              // tweet["media_type"] = `"${
-              //   current?.entities?.media?.[0]?.type ?? ""
-              // }"`;
-              tweet["username"] = current.user.screen_name;
+            tweet["full_text"] = cleanTweetText;
+            tweet["username"] = current.user.screen_name;
+            tweet["tweet_url"] = `https://twitter.com/${current.user.screen_name}/status/${tweet.id_str}`;
 
-              const row = Object.values(tweet).join(";");
+            const row = Object.values(tweet).join(";");
 
-              return [...prev, row];
-            },
-            []
-          );
+            return [...prev, row];
+          }, []);
 
           const csv = (rows as []).join("\n") + "\n";
           const fullPathFilename = appendCsv(FILE_NAME, csv);
@@ -270,17 +231,13 @@ export async function crawl({
           console.info(chalk.blue(`Your tweets saved to: ${fullPathFilename}`));
 
           // progress:
-          console.info(
-            chalk.yellow(`Total tweets saved: ${allData.tweets.length}`)
-          );
+          console.info(chalk.yellow(`Total tweets saved: ${allData.tweets.length}`));
           additionalTweetsCount += comingTweets.length;
 
           // for every multiple of 100, wait for 5 seconds
           if (additionalTweetsCount > 100) {
             additionalTweetsCount = 0;
-            console.info(
-              chalk.gray("\n--Taking a break, waiting for 10 seconds...")
-            );
+            console.info(chalk.gray("\n--Taking a break, waiting for 10 seconds..."));
             await page.waitForTimeout(10_000);
           } else if (additionalTweetsCount > 20) {
             // for every multiple of 20, wait for 3 seconds
@@ -292,18 +249,14 @@ export async function crawl({
           if (timeoutCount === 1) {
             console.info(chalk.gray("No additional tweet, scrolling more..."));
           } else {
-            console.info(
-              chalk.gray("Still no additional tweet, scrolling more...")
-            );
+            console.info(chalk.gray("Still no additional tweet, scrolling more..."));
           }
 
           const findLastTweet = async () => {
             let lastTweet: ElementHandle<SVGElement | HTMLElement>;
 
             while (!lastTweet) {
-              lastTweet = await page.$(
-                "article[data-testid='tweet']:last-child div[data-testid='tweetText'] span"
-              );
+              lastTweet = await page.$("article[data-testid='tweet']:last-child div[data-testid='tweetText'] span");
 
               if (!lastTweet) {
                 await page.evaluate(() => {
@@ -314,9 +267,7 @@ export async function crawl({
               }
 
               await page.evaluate(() => {
-                const lastTweet = document.querySelector(
-                  "article[data-testid='tweet']:last-child"
-                );
+                const lastTweet = document.querySelector("article[data-testid='tweet']:last-child");
 
                 lastTweet?.scrollIntoView({ behavior: "smooth" });
               });
@@ -338,9 +289,7 @@ export async function crawl({
             });
           };
 
-          const lastTweet = await page.$(
-            "article[data-testid='tweet']:last-child div[data-testid='tweetText'] span"
-          );
+          const lastTweet = await page.$("article[data-testid='tweet']:last-child div[data-testid='tweetText'] span");
 
           if (!lastTweet) {
             console.info(chalk.gray("Still looking for the tweets..."));
@@ -355,9 +304,7 @@ export async function crawl({
 
           // scroll to the last tweet
           await page.evaluate(() => {
-            const lastTweet = document.querySelector(
-              "article[data-testid='tweet']:last-child"
-            );
+            const lastTweet = document.querySelector("article[data-testid='tweet']:last-child");
 
             console.log("lastTweet", lastTweet?.textContent);
           });
@@ -366,18 +313,14 @@ export async function crawl({
           break;
         }
 
-        await page.evaluate(() =>
-          window.scrollTo(0, document.body.scrollHeight)
-        );
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       }
     }
 
     await scrollAndSave();
 
     if (allData.tweets.length) {
-      console.info(
-        `Already got ${allData.tweets.length} tweets, done scrolling...`
-      );
+      console.info(`Already got ${allData.tweets.length} tweets, done scrolling...`);
     } else {
       console.info("No tweets found for the search criteria");
     }
@@ -396,13 +339,9 @@ export async function crawl({
   } catch (error) {
     console.error(error);
 
-    const errorFilename =
-      FUlL_PATH_FOLDER_DESTINATION +
-      `/Error-${NOW}.png`.replace(/ /g, "_").replace(".csv", "");
+    const errorFilename = FUlL_PATH_FOLDER_DESTINATION + `/Error-${NOW}.png`.replace(/ /g, "_").replace(".csv", "");
 
-    console.info(
-      chalk.yellowBright("Twitter Harvest v", CURRENT_PACKAGE_VERSION)
-    );
+    console.info(chalk.yellowBright("Twitter Harvest v", CURRENT_PACKAGE_VERSION));
 
     await page.screenshot({ path: path.resolve(errorFilename) }).then(() => {
       console.log(
