@@ -7,13 +7,9 @@ import yargs from "yargs";
 
 async function run() {
   console.log(chalk.bold("\nWelcome to the Twitter Crawler 🕷️\n"));
-  console.log(
-    "This script uses Chromium Browser to crawl data from Twitter with *your* Twitter auth token."
-  );
+  console.log("This script uses Chromium Browser to crawl data from Twitter with *your* Twitter auth token.");
   console.log("Please enter your Twitter auth token when prompted.\n");
-  console.log(
-    "Note: Keep your access token secret! Don't share it with anyone else."
-  );
+  console.log("Note: Keep your access token secret! Don't share it with anyone else.");
   console.log("Note: This script only runs on your local device.\n");
 
   const questions: prompts.PromptObject[] = [];
@@ -125,11 +121,9 @@ async function run() {
     // Run `npx playwright install` to install the Playwright dependencies
     const output = execSync("npx playwright --version").toString();
     execSync("npm i @playwright/test", { stdio: "inherit" });
-    execSync("npx playwright install chromium", { stdio: "inherit" });
+    execSync("npx playwright install chromium --with-deps", { stdio: "inherit" });
     if (!output.includes("Version")) {
-      console.log(
-        "Installing required playwright browser dependencies... Please wait, this will take a while"
-      );
+      console.log("Installing required playwright browser dependencies... Please wait, this will take a while");
     }
 
     // Call the `crawl` function with the access token
