@@ -21,7 +21,9 @@
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
+    "playwright-extra": "^4.3.6",
     "prompts": "^2.4.2",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -37,7 +39,7 @@
   },
   "scripts": {
     "start": "ts-node src/crawl.ts",
-    "dev": "ts-node-dev --respawn --transpile-only src/crawl.ts",
+    "dev": "ts-node-dev src/dev.ts",
     "build": "tsc",
     "build:pkg": "pkg . --out-path ./bin"
   }

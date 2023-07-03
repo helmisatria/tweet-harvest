@@ -8,6 +8,6 @@
     "forceConsistentCasingInFileNames": true
   },
   "lib": ["esnext", "dom"],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "**/*.d.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
