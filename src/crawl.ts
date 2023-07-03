@@ -167,9 +167,9 @@ export async function crawl({
         if (response) {
           const { data: responseBody } = (await response.json()) as { data: TweetResponseData };
 
-          const tweets = responseBody.search_by_raw_query.search_timeline.timeline.instructions[0].entries;
+          const tweets = responseBody.search_by_raw_query.search_timeline.timeline?.instructions?.[0]?.entries;
 
-          if (!tweets.length) {
+          if (!tweets?.length) {
             // found text "not found" on the page
             if (await page.getByText("No results for").count()) {
               TWEETS_NOT_FOUND_ON_LIVE_TAB = true;
