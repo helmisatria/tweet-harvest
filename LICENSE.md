@@ -1,7 +1,17 @@
-MIT License
+Tweet Harvest Tool License
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+This license applies to the Tweet Harvest tool ("the Tool") developed by Helmi Satria.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+1. Educational Use: The Tool is licensed for educational purposes only. You are permitted to use, study, and modify the Tool solely for educational and non-commercial purposes.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+2. Distribution: You may distribute the Tool, including its source code, under the condition that you include this license and provide appropriate attribution to Helmi Satria as the original creator.
+
+3. Restrictions: You are prohibited from using the Tool for any commercial purposes, including but not limited to selling, licensing, or incorporating it into a commercial product or service.
+
+4. No Warranty: The Tool is provided "as is," without warranty of any kind, express or implied. Helmi Satria makes no representations or warranties regarding the Tool's accuracy, reliability, or suitability for any purpose.
+
+5. Limitation of Liability: In no event shall Helmi Satria be liable for any claim, damages, or other liability arising out of or in connection with the Tool or its use.
+
+6. Compliance: You are solely responsible for ensuring that your use of the Tool complies with the terms and conditions of this license, as well as any applicable laws and regulations.
+
+By using the Tool, you agree to be bound by the terms and conditions of this license.
