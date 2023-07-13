@@ -285,6 +285,7 @@ export async function crawl({
     }
   } catch (error) {
     console.error(error);
+    console.info(chalk.blue(`Keywords: ${MODIFIED_SEARCH_KEYWORDS}`));
     console.info(chalk.yellowBright("Twitter Harvest v", CURRENT_PACKAGE_VERSION));
 
     const errorFilename = FUlL_PATH_FOLDER_DESTINATION + `/Error-${NOW}.png`.replace(/ /g, "_").replace(".csv", "");
