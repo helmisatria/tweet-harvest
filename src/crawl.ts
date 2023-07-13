@@ -7,6 +7,8 @@ import path from "path";
 import { TweetResponseData } from "./types/response-tweet";
 import { chromium } from "playwright-extra";
 import stealth from "puppeteer-extra-plugin-stealth";
+import { inputKeywords } from "./features/input-keywords";
+import { listenNetworkRequests } from "./features/listen-network-requests";
 
 chromium.use(stealth());
 
@@ -47,14 +49,14 @@ export async function crawl({
   SEARCH_KEYWORDS,
   SEARCH_FROM_DATE,
   SEARCH_TO_DATE,
-  TARGET_TWEET_COUNT,
+  TARGET_TWEET_COUNT = 10,
   // default delay each tweet activity: 3 seconds
   DELAY_EACH_TWEET_SECONDS = 3,
   DEBUG_MODE,
   OUTPUT_FILENAME,
 }: {
   ACCESS_TOKEN: string;
-  SEARCH_KEYWORDS?: string;
+  SEARCH_KEYWORDS: string;
   SEARCH_FROM_DATE?: string;
   SEARCH_TO_DATE?: string;
   TARGET_TWEET_COUNT?: number;
@@ -84,10 +86,10 @@ export async function crawl({
 
   let TWEETS_NOT_FOUND_ON_LIVE_TAB = false;
 
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ headless: false });
 
   const context = await browser.newContext({
-    screen: { width: 1920, height: 1080 },
+    screen: { width: 1240, height: 1080 },
     storageState: {
       cookies: [
         {
@@ -106,19 +108,9 @@ export async function crawl({
   });
 
   const page = await context.newPage();
-
   page.setDefaultTimeout(60 * 1000);
 
-  // Listen to network requests
-  await page.route("**/*", (route) => {
-    const url = route.request().url();
-    // only log requests that includes SearchTimeline
-    if (url.includes("SearchTimeline")) {
-      console.info(chalk.blue(`\nGot some tweets, saving to file...`));
-    }
-
-    route.continue();
-  });
+  listenNetworkRequests(page);
 
   async function startCrawlTwitter({
     twitterSearchUrl = "https://twitter.com/search-advanced?f=live",
@@ -133,29 +125,12 @@ export async function crawl({
       return browser.close();
     }
 
-    // wait until it shown: input[name="allOfTheseWords"]
-    await page.waitForSelector('input[name="allOfTheseWords"]', {
-      state: "visible",
+    inputKeywords(page, {
+      SEARCH_FROM_DATE,
+      SEARCH_TO_DATE,
+      SEARCH_KEYWORDS,
+      MODIFIED_SEARCH_KEYWORDS,
     });
-
-    await page.click('input[name="allOfTheseWords"]');
-
-    if (SEARCH_FROM_DATE) {
-      const [day, month, year] = SEARCH_FROM_DATE.split(" ")[0].split("-");
-      MODIFIED_SEARCH_KEYWORDS += ` since:${year}-${month}-${day}`;
-    }
-
-    if (SEARCH_TO_DATE) {
-      const [day, month, year] = SEARCH_TO_DATE.split(" ")[0].split("-");
-      MODIFIED_SEARCH_KEYWORDS += ` until:${year}-${month}-${day}`;
-    }
-
-    console.info(chalk.yellow(`\nFilling in keywords: ${MODIFIED_SEARCH_KEYWORDS}\n`));
-
-    await page.fill('input[name="allOfTheseWords"]', MODIFIED_SEARCH_KEYWORDS);
-
-    // Press Enter
-    await page.press('input[name="allOfTheseWords"]', "Enter");
 
     let timeoutCount = 0;
     let additionalTweetsCount = 0;
@@ -208,6 +183,8 @@ export async function crawl({
               if (isPromotedTweet) return null;
 
               const result = tweet.content.itemContent.tweet_results.result;
+              if (!result?.core?.user_results) return null;
+
               const tweetContent = result.legacy || result.tweet.legacy;
               const userContent =
                 result.core.user_results.result.legacy || result.tweet.core.user_results.result.legacy;
@@ -261,72 +238,29 @@ export async function crawl({
             console.info(chalk.gray("\n--Taking a break, waiting for 10 seconds..."));
             await page.waitForTimeout(10_000);
           } else if (additionalTweetsCount > 20) {
-            // for every multiple of 20, wait for 3 seconds
-            // console.info("Taking a break, waiting for 3 seconds...");
             await page.waitForTimeout(DELAY_EACH_TWEET_SECONDS * 1000);
           }
         } else {
           timeoutCount++;
-          if (timeoutCount === 1) {
-            console.info(chalk.gray("Scrolling more..."));
-          } else {
-            console.info(chalk.gray("Still scrolling more..."));
-          }
+          console.info(chalk.gray("Scrolling more..."));
 
-          const findLastTweet = async () => {
-            let lastTweet: ElementHandle<SVGElement | HTMLElement>;
-
-            while (!lastTweet) {
-              lastTweet = await page.$("article[data-testid='tweet']:last-child div[data-testid='tweetText'] span");
-
-              if (!lastTweet) {
-                await page.evaluate(() => {
-                  window.scrollTo(0, 9_000 * 9999);
-                });
-
-                await page.waitForTimeout(1_000);
-              }
-            }
-
-            return lastTweet;
-          };
-
-          const clickLastTweet = async () => {
-            const lastTweet = await findLastTweet();
-            await lastTweet.click({ timeout: 1_000 }).catch(async () => {
-              await page.evaluate(() => {
-                window.scrollTo(0, document.body.scrollHeight);
-              });
-
-              await clickLastTweet();
-            });
-          };
-
-          const lastTweet = await page.$("article[data-testid='tweet']:last-child div[data-testid='tweetText'] span");
-
-          if (!lastTweet) {
-            console.info(chalk.gray("Still looking for the tweets..."));
-            await findLastTweet();
-            await page.waitForTimeout(1_000);
-          }
-
-          await clickLastTweet();
-
-          await page.goBack();
-          await page.waitForURL("https://twitter.com/search**");
-
-          // scroll to the last tweet
-          await page.evaluate(() => {
-            const lastTweet = document.querySelector("article[data-testid='tweet']:last-child");
-
-            console.log("lastTweet", lastTweet?.textContent);
-          });
+          await page.evaluate(() =>
+            window.scrollTo({
+              behavior: "smooth",
+              top: 10_000 * 9_000,
+            })
+          );
 
           await scrollAndSave(); // call the function again to resume scrolling
           break;
         }
 
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.evaluate(() =>
+          window.scrollTo({
+            behavior: "smooth",
+            top: 10_000 * 9_000,
+          })
+        );
       }
     }
 
@@ -351,10 +285,9 @@ export async function crawl({
     }
   } catch (error) {
     console.error(error);
+    console.info(chalk.yellowBright("Twitter Harvest v", CURRENT_PACKAGE_VERSION));
 
     const errorFilename = FUlL_PATH_FOLDER_DESTINATION + `/Error-${NOW}.png`.replace(/ /g, "_").replace(".csv", "");
-
-    console.info(chalk.yellowBright("Twitter Harvest v", CURRENT_PACKAGE_VERSION));
 
     await page.screenshot({ path: path.resolve(errorFilename) }).then(() => {
       console.log(
