@@ -86,7 +86,7 @@ export async function crawl({
 
   let TWEETS_NOT_FOUND_ON_LIVE_TAB = false;
 
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: true });
 
   const context = await browser.newContext({
     screen: { width: 1240, height: 1080 },
