@@ -18,7 +18,6 @@ async function run() {
     .usage("Usage: $0 [options]")
     .options({
       token: {
-        alias: "t",
         describe: "Twitter auth token",
         type: "string",
       },
