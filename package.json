@@ -1,7 +1,7 @@
 {
   "name": "tweet-harvest",
   "description": "A Twitter crawler helper with auth",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "MIT",
   "author": "Helmi Satria",
   "publishConfig": {
@@ -44,6 +44,8 @@
     "start": "ts-node src/crawl.ts",
     "dev": "ts-node-dev src/dev.ts",
     "build": "tsc",
-    "build:pkg": "pkg . --out-path ./bin"
+    "build:pkg": "pkg . --out-path ./bin",
+    "prepublish": "pnpm build",
+    "publish": "npm publish --access public"
   }
 }
