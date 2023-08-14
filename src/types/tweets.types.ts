@@ -108,38 +108,46 @@ export interface User {
   super_follow_eligible: boolean;
 }
 
+export interface ItemContent {
+  itemType: string;
+  __typename: string;
+  tweet_results: {
+    result: TweetContent & {
+      tweet?: TweetContent;
+    };
+  };
+  tweetDisplayType: string;
+  socialContext: {
+    type: string;
+    contextType: string;
+    text: string;
+    landingUrl: {
+      url: string;
+      urlType: string;
+      urtEndpointOptions: {
+        title: string;
+        requestParams: {
+          key: string;
+          value: string;
+        }[];
+      };
+    };
+  };
+}
+
 export interface Entry {
   entryId: string;
   sortIndex: string;
   content: {
+    items?: {
+      entryId: string;
+      item: {
+        itemContent: ItemContent;
+      };
+    }[];
     entryType: string;
     __typename: string;
-    itemContent: {
-      itemType: string;
-      __typename: string;
-      tweet_results: {
-        result: TweetContent & {
-          tweet?: TweetContent;
-        };
-      };
-      tweetDisplayType: string;
-      socialContext: {
-        type: string;
-        contextType: string;
-        text: string;
-        landingUrl: {
-          url: string;
-          urlType: string;
-          urtEndpointOptions: {
-            title: string;
-            requestParams: {
-              key: string;
-              value: string;
-            }[];
-          };
-        };
-      };
-    };
+    itemContent: ItemContent;
     feedbackInfo: {
       feedbackKeys: string[];
       feedbackMetadata: string;

@@ -1,0 +1,1465 @@
+{
+  "data": {
+    "threaded_conversation_with_injections_v2": {
+      "instructions": [
+        {
+          "type": "TimelineAddEntries",
+          "entries": [
+            {
+              "entryId": "conversationthread-1690656058568777728",
+              "sortIndex": "7532781802845662861",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690656058568777728-tweet-1690656058568777728",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690656058568777728",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjoxNTg5NjE1NTEyMTc0MzQyMTQ0",
+                                  "rest_id": "1589615512174342144",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": false,
+                                    "can_media_tag": true,
+                                    "created_at": "Mon Nov 07 13:47:59 +0000 2022",
+                                    "default_profile": true,
+                                    "default_profile_image": false,
+                                    "description": "#follbackNKRI\uD83C\uDDEE\uD83C\uDDE9\n#EkonomiKebangsaan",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 717,
+                                    "followers_count": 1035,
+                                    "friends_count": 946,
+                                    "has_custom_timelines": true,
+                                    "is_translator": false,
+                                    "listed_count": 1,
+                                    "location": "",
+                                    "media_count": 15,
+                                    "name": "alifah",
+                                    "normal_followers_count": 1035,
+                                    "pinned_tweet_ids_str": [],
+                                    "possibly_sensitive": false,
+                                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/1589615512174342144/1691847183",
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1665082818530250752/fZAcDoT0_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "alifahzi",
+                                    "statuses_count": 310,
+                                    "translator_type": "none",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690656058568777728"],
+                              "editable_until_msecs": "1691922389000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": true,
+                            "views": {
+                              "count": "3950",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Sun Aug 13 09:26:29 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 105],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [
+                                  {
+                                    "indices": [86, 105],
+                                    "text": "SosokGanjarPranowo"
+                                  }
+                                ],
+                                "symbols": []
+                              },
+                              "favorite_count": 1,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan Deep talk yang bikin terharu dan bangga terhadap sosok seorang ayah\uD83D\uDC4D\n#SosokGanjarPranowo",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "in",
+                              "quote_count": 0,
+                              "reply_count": 2,
+                              "retweet_count": 0,
+                              "retweeted": false,
+                              "user_id_str": "1589615512174342144",
+                              "id_str": "1690656058568777728"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABFIgBCCAHABUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-1690822372243521536",
+              "sortIndex": "7532781802845662851",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690822372243521536-tweet-1690822372243521536",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690822372243521536",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjozMDk4OTE1NzE5",
+                                  "rest_id": "3098915719",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": true,
+                                    "can_media_tag": false,
+                                    "created_at": "Fri Mar 20 05:27:39 +0000 2015",
+                                    "default_profile": true,
+                                    "default_profile_image": false,
+                                    "description": "a walking bundle of intrusive thoughts",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 22405,
+                                    "followers_count": 633,
+                                    "friends_count": 867,
+                                    "has_custom_timelines": true,
+                                    "is_translator": false,
+                                    "listed_count": 1,
+                                    "location": "terminal",
+                                    "media_count": 1160,
+                                    "name": "wis/kur",
+                                    "normal_followers_count": 633,
+                                    "pinned_tweet_ids_str": ["1660208286766104576"],
+                                    "possibly_sensitive": false,
+                                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/3098915719/1689743937",
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1587474746589196289/Uh8zkuSY_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "palbapunk",
+                                    "statuses_count": 16996,
+                                    "translator_type": "none",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690822372243521536"],
+                              "editable_until_msecs": "1691962042000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": false,
+                            "views": {
+                              "count": "1672",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Sun Aug 13 20:27:22 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 21],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [],
+                                "symbols": []
+                              },
+                              "favorite_count": 10,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan ALAY",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "en",
+                              "quote_count": 1,
+                              "reply_count": 0,
+                              "retweet_count": 0,
+                              "retweeted": false,
+                              "user_id_str": "3098915719",
+                              "id_str": "1690822372243521536"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABFIgJiCIDAAUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-1690630409955241984",
+              "sortIndex": "7532781802845662841",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690630409955241984-tweet-1690630409955241984",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690630409955241984",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjoyNTQ5NTYyNzY=",
+                                  "rest_id": "254956276",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": false,
+                                    "can_media_tag": false,
+                                    "created_at": "Sun Feb 20 10:49:16 +0000 2011",
+                                    "default_profile": false,
+                                    "default_profile_image": false,
+                                    "description": "Schweigen gegenüber Narren ist ein Ruhm",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 1154,
+                                    "followers_count": 201,
+                                    "friends_count": 207,
+                                    "has_custom_timelines": true,
+                                    "is_translator": false,
+                                    "listed_count": 0,
+                                    "location": "West Java, Indonesia",
+                                    "media_count": 395,
+                                    "name": "Sipir Azkaban",
+                                    "normal_followers_count": 201,
+                                    "pinned_tweet_ids_str": [],
+                                    "possibly_sensitive": true,
+                                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/254956276/1678957153",
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1638181175117352960/k2UWWSxG_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "mhmmdradityo",
+                                    "statuses_count": 17799,
+                                    "translator_type": "none",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  },
+                                  "professional": {
+                                    "rest_id": "1587317929619914753",
+                                    "professional_type": "Business",
+                                    "category": [
+                                      {
+                                        "id": 454,
+                                        "name": "Heating, Ventilating & Air Conditioning Service",
+                                        "icon_name": "IconBriefcaseStroke"
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690630409955241984"],
+                              "editable_until_msecs": "1691916274000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": false,
+                            "views": {
+                              "count": "1765",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Sun Aug 13 07:44:34 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 92],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [],
+                                "symbols": []
+                              },
+                              "favorite_count": 6,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan Wahhh, sangat natural sekali kesedihannya, wadas nohhh pada nanges2, bloggg",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "in",
+                              "quote_count": 0,
+                              "reply_count": 0,
+                              "retweet_count": 0,
+                              "retweeted": false,
+                              "user_id_str": "254956276",
+                              "id_str": "1690630409955241984"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABFIgBiCQDAAUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-1690892744921948160",
+              "sortIndex": "7532781802845662831",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690892744921948160-tweet-1690892744921948160",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690892744921948160",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjoxNDgwOTEzNzM1NTYwNjcxMjM0",
+                                  "rest_id": "1480913735560671234",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": false,
+                                    "can_media_tag": true,
+                                    "created_at": "Tue Jan 11 14:46:02 +0000 2022",
+                                    "default_profile": true,
+                                    "default_profile_image": false,
+                                    "description": "Pendukung ganjar sampek kiamate wedhus.",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 8202,
+                                    "followers_count": 62,
+                                    "friends_count": 33,
+                                    "has_custom_timelines": false,
+                                    "is_translator": false,
+                                    "listed_count": 0,
+                                    "location": "",
+                                    "media_count": 200,
+                                    "name": "Kopi.Susi",
+                                    "normal_followers_count": 62,
+                                    "pinned_tweet_ids_str": [],
+                                    "possibly_sensitive": false,
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1580473141675012097/nr14wx18_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "RizkyRisksky",
+                                    "statuses_count": 5927,
+                                    "translator_type": "none",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690892744921948160"],
+                              "editable_until_msecs": "1691978820000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": true,
+                            "views": {
+                              "count": "1311",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"https://mobile.twitter.com\" rel=\"nofollow\">Twitter Web App</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Mon Aug 14 01:07:00 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 124],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [],
+                                "symbols": []
+                              },
+                              "favorite_count": 5,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan Astagaaaa.\n\nJurnalis emang mencari kedalaman berita, tapi bukan tentang drama keluarga juga ... bambaaaaang",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "in",
+                              "quote_count": 0,
+                              "reply_count": 1,
+                              "retweet_count": 0,
+                              "retweeted": false,
+                              "user_id_str": "1480913735560671234",
+                              "id_str": "1690892744921948160"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABDIQBCCgDABUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-1690604629304942592",
+              "sortIndex": "7532781802845662821",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690604629304942592-tweet-1690604629304942592",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690604629304942592",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjo2MTQ2MTg4Nw==",
+                                  "rest_id": "61461887",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": true,
+                                    "can_media_tag": false,
+                                    "created_at": "Thu Jul 30 11:22:31 +0000 2009",
+                                    "default_profile": true,
+                                    "default_profile_image": false,
+                                    "description": "alter ego",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 3096,
+                                    "followers_count": 429,
+                                    "friends_count": 588,
+                                    "has_custom_timelines": true,
+                                    "is_translator": false,
+                                    "listed_count": 6,
+                                    "location": "",
+                                    "media_count": 1389,
+                                    "name": "\uD83E\uDD2D",
+                                    "normal_followers_count": 429,
+                                    "pinned_tweet_ids_str": [],
+                                    "possibly_sensitive": false,
+                                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/61461887/1538624851",
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/973942578369277953/eR0qTuKI_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "cahlantana",
+                                    "statuses_count": 54689,
+                                    "translator_type": "none",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690604629304942592"],
+                              "editable_until_msecs": "1691910128000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": true,
+                            "views": {
+                              "count": "4487",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Sun Aug 13 06:02:08 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 62],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [],
+                                "symbols": []
+                              },
+                              "favorite_count": 2,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan bang mending suruh nonton one piece 1071 ajaa",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "in",
+                              "quote_count": 0,
+                              "reply_count": 0,
+                              "retweet_count": 0,
+                              "retweeted": false,
+                              "user_id_str": "61461887",
+                              "id_str": "1690604629304942592"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABFIgBiDADAAUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-1690905461242183680",
+              "sortIndex": "7532781802845662811",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690905461242183680-tweet-1690905461242183680",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690905461242183680",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjo4Mjg1NTcxMw==",
+                                  "rest_id": "82855713",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": false,
+                                    "can_media_tag": false,
+                                    "created_at": "Fri Oct 16 11:31:05 +0000 2009",
+                                    "default_profile": false,
+                                    "default_profile_image": false,
+                                    "description": "low profile, high profit",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 5605,
+                                    "followers_count": 573,
+                                    "friends_count": 398,
+                                    "has_custom_timelines": false,
+                                    "is_translator": false,
+                                    "listed_count": 8,
+                                    "location": "",
+                                    "media_count": 471,
+                                    "name": "muchas gracias",
+                                    "normal_followers_count": 573,
+                                    "pinned_tweet_ids_str": [],
+                                    "possibly_sensitive": false,
+                                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/82855713/1539838780",
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1686917446559756288/bP4VFfNI_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "nigranigz",
+                                    "statuses_count": 31964,
+                                    "translator_type": "none",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690905461242183680"],
+                              "editable_until_msecs": "1691981852000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": true,
+                            "views": {
+                              "count": "780",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Mon Aug 14 01:57:32 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 53],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [],
+                                "symbols": []
+                              },
+                              "favorite_count": 1,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan mending makan mie aja bang, kenyang.",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "in",
+                              "quote_count": 0,
+                              "reply_count": 0,
+                              "retweet_count": 0,
+                              "retweeted": false,
+                              "user_id_str": "82855713",
+                              "id_str": "1690905461242183680"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABFIQBiCADAAUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-1690645327211302912",
+              "sortIndex": "7532781802845662801",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690645327211302912-tweet-1690645327211302912",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690645327211302912",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjozMDkwMzU1NzM=",
+                                  "rest_id": "309035573",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": true,
+                                    "can_media_tag": false,
+                                    "created_at": "Wed Jun 01 12:31:25 +0000 2011",
+                                    "default_profile": false,
+                                    "default_profile_image": false,
+                                    "description": "Mossad Indonesie",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 8228,
+                                    "followers_count": 300,
+                                    "friends_count": 395,
+                                    "has_custom_timelines": true,
+                                    "is_translator": false,
+                                    "listed_count": 0,
+                                    "location": "Zermatt, Switzerland",
+                                    "media_count": 924,
+                                    "name": "Miracle Investe",
+                                    "normal_followers_count": 300,
+                                    "pinned_tweet_ids_str": [],
+                                    "possibly_sensitive": false,
+                                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/309035573/1674493876",
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1656211526565646337/O-2eYaCo_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "marwanFC",
+                                    "statuses_count": 13306,
+                                    "translator_type": "none",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690645327211302912"],
+                              "editable_until_msecs": "1691919831000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": true,
+                            "views": {
+                              "count": "11491",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Sun Aug 13 08:43:51 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 147],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [],
+                                "symbols": []
+                              },
+                              "favorite_count": 69,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan Yaelah ngee, bahas rekam jejak dan visi lah. Drama mulu dah, itu lho partai-partai dah berubah haluan, mana strategi progresifnya?",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "in",
+                              "quote_count": 0,
+                              "reply_count": 0,
+                              "retweet_count": 2,
+                              "retweeted": false,
+                              "user_id_str": "309035573",
+                              "id_str": "1690645327211302912"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABFIgBiCADAAUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-1690652858763685888",
+              "sortIndex": "7532781802845662791",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690652858763685888-tweet-1690652858763685888",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690652858763685888",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjo3NjAzNDAwMA==",
+                                  "rest_id": "76034000",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": false,
+                                    "can_media_tag": false,
+                                    "created_at": "Mon Sep 21 14:00:40 +0000 2009",
+                                    "default_profile": false,
+                                    "default_profile_image": false,
+                                    "description": "Calon Penghuni Kubur",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 7334,
+                                    "followers_count": 323,
+                                    "friends_count": 1336,
+                                    "has_custom_timelines": true,
+                                    "is_translator": false,
+                                    "listed_count": 6,
+                                    "location": "Pondok Aren, Indonesia",
+                                    "media_count": 577,
+                                    "name": "Rahmat Kurniawan",
+                                    "normal_followers_count": 323,
+                                    "pinned_tweet_ids_str": [],
+                                    "possibly_sensitive": false,
+                                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/76034000/1673332543",
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1612699531589877760/UMO63Pd-_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "Rh_Kurniawan",
+                                    "statuses_count": 77477,
+                                    "translator_type": "regular",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690652858763685888"],
+                              "editable_until_msecs": "1691921626000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": true,
+                            "views": {
+                              "count": "4576",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Sun Aug 13 09:13:46 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 68],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [],
+                                "symbols": []
+                              },
+                              "favorite_count": 12,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan Coba suruh deep talk sama warga Wadas &amp; Kendeng",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "in",
+                              "quote_count": 2,
+                              "reply_count": 0,
+                              "retweet_count": 1,
+                              "retweeted": false,
+                              "user_id_str": "76034000",
+                              "id_str": "1690652858763685888"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABFIgBiCADAAUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-1690883685237813248",
+              "sortIndex": "7532781802845662781",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690883685237813248-tweet-1690883685237813248",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690883685237813248",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjo5MDY4ODIwMDgwOTcyOTIyODg=",
+                                  "rest_id": "906882008097292288",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": true,
+                                    "can_media_tag": false,
+                                    "created_at": "Sun Sep 10 14:08:14 +0000 2017",
+                                    "default_profile": true,
+                                    "default_profile_image": false,
+                                    "description": "crying until march 2024",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 11501,
+                                    "followers_count": 309,
+                                    "friends_count": 783,
+                                    "has_custom_timelines": true,
+                                    "is_translator": false,
+                                    "listed_count": 0,
+                                    "location": "the dungeon",
+                                    "media_count": 1786,
+                                    "name": "WTB 2 TIX ERAS TOUR SG",
+                                    "normal_followers_count": 309,
+                                    "pinned_tweet_ids_str": ["1677688705514110976"],
+                                    "possibly_sensitive": false,
+                                    "profile_banner_url": "https://pbs.twimg.com/profile_banners/906882008097292288/1679832914",
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1643049272655622144/clfX64xT_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "midrainfall",
+                                    "statuses_count": 40326,
+                                    "translator_type": "none",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690883685237813248"],
+                              "editable_until_msecs": "1691976660000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": false,
+                            "views": {
+                              "count": "410",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Mon Aug 14 00:31:00 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 25],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [],
+                                "symbols": []
+                              },
+                              "favorite_count": 0,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan ga jelas",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "in",
+                              "quote_count": 0,
+                              "reply_count": 0,
+                              "retweet_count": 0,
+                              "retweeted": false,
+                              "user_id_str": "906882008097292288",
+                              "id_str": "1690883685237813248"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABDIQBiCADAAUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-1690661999422918656",
+              "sortIndex": "7532781802845662771",
+              "content": {
+                "entryType": "TimelineTimelineModule",
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-1690661999422918656-tweet-1690661999422918656",
+                    "item": {
+                      "itemContent": {
+                        "itemType": "TimelineTweet",
+                        "__typename": "TimelineTweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "1690661999422918656",
+                            "has_birdwatch_notes": false,
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "id": "VXNlcjoxMDE2OTk1NTcy",
+                                  "rest_id": "1016995572",
+                                  "affiliates_highlighted_label": {},
+                                  "has_graduated_access": true,
+                                  "is_blue_verified": false,
+                                  "profile_image_shape": "Circle",
+                                  "legacy": {
+                                    "can_dm": false,
+                                    "can_media_tag": true,
+                                    "created_at": "Mon Dec 17 08:38:58 +0000 2012",
+                                    "default_profile": true,
+                                    "default_profile_image": false,
+                                    "description": "bercanda",
+                                    "entities": {
+                                      "description": {
+                                        "urls": []
+                                      }
+                                    },
+                                    "fast_followers_count": 0,
+                                    "favourites_count": 1446,
+                                    "followers_count": 215,
+                                    "friends_count": 315,
+                                    "has_custom_timelines": true,
+                                    "is_translator": false,
+                                    "listed_count": 0,
+                                    "location": "",
+                                    "media_count": 293,
+                                    "name": "vigho",
+                                    "normal_followers_count": 215,
+                                    "pinned_tweet_ids_str": [],
+                                    "possibly_sensitive": false,
+                                    "profile_image_url_https": "https://pbs.twimg.com/profile_images/1409052357757865988/x_EzIA6U_normal.jpg",
+                                    "profile_interstitial_type": "",
+                                    "screen_name": "qaitsar",
+                                    "statuses_count": 9012,
+                                    "translator_type": "none",
+                                    "verified": false,
+                                    "want_retweets": false,
+                                    "withheld_in_countries": []
+                                  }
+                                }
+                              }
+                            },
+                            "edit_control": {
+                              "edit_tweet_ids": ["1690661999422918656"],
+                              "editable_until_msecs": "1691923806000",
+                              "is_edit_eligible": false,
+                              "edits_remaining": "5"
+                            },
+                            "is_translatable": true,
+                            "views": {
+                              "count": "1823",
+                              "state": "EnabledWithCount"
+                            },
+                            "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+                            "legacy": {
+                              "bookmark_count": 0,
+                              "bookmarked": false,
+                              "created_at": "Sun Aug 13 09:50:06 +0000 2023",
+                              "conversation_id_str": "1690590234009112576",
+                              "display_text_range": [17, 24],
+                              "entities": {
+                                "user_mentions": [
+                                  {
+                                    "id_str": "49650895",
+                                    "name": "Pangeran",
+                                    "screen_name": "pangeransiahaan",
+                                    "indices": [0, 16]
+                                  }
+                                ],
+                                "urls": [],
+                                "hashtags": [],
+                                "symbols": []
+                              },
+                              "favorite_count": 1,
+                              "favorited": false,
+                              "full_text": "@pangeransiahaan ga kena",
+                              "in_reply_to_screen_name": "pangeransiahaan",
+                              "in_reply_to_status_id_str": "1690590234009112576",
+                              "in_reply_to_user_id_str": "49650895",
+                              "is_quote_status": false,
+                              "lang": "in",
+                              "quote_count": 0,
+                              "reply_count": 1,
+                              "retweet_count": 0,
+                              "retweeted": false,
+                              "user_id_str": "1016995572",
+                              "id_str": "1690661999422918656"
+                            },
+                            "quick_promote_eligibility": {
+                              "eligibility": "IneligibleUserUnauthorized"
+                            }
+                          }
+                        },
+                        "tweetDisplayType": "Tweet"
+                      },
+                      "clientEventInfo": {
+                        "details": {
+                          "conversationDetails": {
+                            "conversationSection": "HighQuality"
+                          },
+                          "timelinesDetails": {
+                            "controllerData": "DAACDAAEDAABCgABFIgBiCADAAUKAAIAAAAABEBACAAAAAA="
+                          }
+                        }
+                      }
+                    }
+                  }
+                ],
+                "displayType": "VerticalConversation",
+                "clientEventInfo": {
+                  "details": {
+                    "conversationDetails": {
+                      "conversationSection": "HighQuality"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "cursor-bottom-1613235297753655318",
+              "sortIndex": "7532781802845662770",
+              "content": {
+                "entryType": "TimelineTimelineItem",
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "itemType": "TimelineTimelineCursor",
+                  "__typename": "TimelineTimelineCursor",
+                  "value": "qQEAAPEFHBn2LoDA3ZGQr6n3LoDA2cX8_K4SANHdqpmk9y6CgNbh1dTXGwDQ4YiotPYugIDWgd27rQkA4NOd_eC09y6AgLfN6M-kNgBQ0pWA5ZUtAFDb2bKozRsAUNSZ4qnPEgBQ1onz_7IJAODUye7TsvYugsDY8dGIwDYAUNSZ972wEgBR3JXigLoSAEDp_vWiYwBQ1K2T8ckJAFDX-fX1mFEAUd7h3OOmUQBA7bCIuBsAUNj1tua1GwBQ27nbmrA_AFDZ1b_fzBIAUN3lxP-gLQBQ1_GatKsSAODRlYD9nfYugoDRrbfTwy0AUN7Bm8fOJABA3I2s1EgAYcDRsYj_nasAQM3U4KIJAFDd0an0sy0AUdPFgIyfEgBB-cPp9BcBMdHD3BcBQNXpvqJEAWGA0IWMnNYtAEDxmPCcEgBQ0qnZn5oSAFDX_dDZqQkAUdrF4-irMgFAjZKGgUgAYNrdmIWr8eEAQL2n_4A2AODVhcqutfYuJQISFQQAAA",
+                  "cursorType": "Bottom"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "TimelineTerminateTimeline",
+          "direction": "Top"
+        }
+      ]
+    }
+  }
+}

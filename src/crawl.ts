@@ -1,14 +1,14 @@
-import { ElementHandle } from "@playwright/test";
 import * as fs from "fs";
 import dayjs from "dayjs";
 import { pick } from "lodash";
 import chalk from "chalk";
 import path from "path";
-import { TweetResponseData } from "./types/response-tweet";
+import { Entry } from "./types/tweets.types";
 import { chromium } from "playwright-extra";
 import stealth from "puppeteer-extra-plugin-stealth";
 import { inputKeywords } from "./features/input-keywords";
 import { listenNetworkRequests } from "./features/listen-network-requests";
+import { HEADLESS_MODE } from "./dev";
 
 chromium.use(stealth());
 
@@ -47,6 +47,7 @@ type StartCrawlTwitterParams = {
 export async function crawl({
   ACCESS_TOKEN,
   SEARCH_KEYWORDS,
+  TWEET_DETAIL_URL,
   SEARCH_FROM_DATE,
   SEARCH_TO_DATE,
   TARGET_TWEET_COUNT = 10,
@@ -56,14 +57,20 @@ export async function crawl({
   OUTPUT_FILENAME,
 }: {
   ACCESS_TOKEN: string;
-  SEARCH_KEYWORDS: string;
+  SEARCH_KEYWORDS?: string;
   SEARCH_FROM_DATE?: string;
   SEARCH_TO_DATE?: string;
   TARGET_TWEET_COUNT?: number;
   DELAY_EACH_TWEET_SECONDS?: number;
   DEBUG_MODE?: boolean;
   OUTPUT_FILENAME?: string;
+  TWEET_DETAIL_URL?: string;
 }) {
+  const CRAWL_MODE = TWEET_DETAIL_URL ? "DETAIL" : "SEARCH";
+  const IS_DETAIL_MODE = CRAWL_MODE === "DETAIL";
+  const IS_SEARCH_MODE = CRAWL_MODE === "SEARCH";
+  const TIMEOUT_LIMIT = 4;
+
   let MODIFIED_SEARCH_KEYWORDS = SEARCH_KEYWORDS;
 
   const CURRENT_PACKAGE_VERSION = require("../package.json").version;
@@ -86,7 +93,7 @@ export async function crawl({
 
   let TWEETS_NOT_FOUND_ON_LIVE_TAB = false;
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: HEADLESS_MODE });
 
   const context = await browser.newContext({
     screen: { width: 1240, height: 1080 },
@@ -115,7 +122,11 @@ export async function crawl({
   async function startCrawlTwitter({
     twitterSearchUrl = "https://twitter.com/search-advanced?f=live",
   }: StartCrawlTwitterParams = {}) {
-    await page.goto(twitterSearchUrl);
+    if (IS_DETAIL_MODE) {
+      await page.goto(TWEET_DETAIL_URL);
+    } else {
+      await page.goto(twitterSearchUrl);
+    }
 
     // check is current page url is twitter login page (have /login in the url)
     const isLoggedIn = !page.url().includes("/login");
@@ -125,12 +136,14 @@ export async function crawl({
       return browser.close();
     }
 
-    inputKeywords(page, {
-      SEARCH_FROM_DATE,
-      SEARCH_TO_DATE,
-      SEARCH_KEYWORDS,
-      MODIFIED_SEARCH_KEYWORDS,
-    });
+    if (IS_SEARCH_MODE) {
+      inputKeywords(page, {
+        SEARCH_FROM_DATE,
+        SEARCH_TO_DATE,
+        SEARCH_KEYWORDS,
+        MODIFIED_SEARCH_KEYWORDS,
+      });
+    }
 
     let timeoutCount = 0;
     let additionalTweetsCount = 0;
@@ -140,19 +153,29 @@ export async function crawl({
     };
 
     async function scrollAndSave() {
-      timeoutCount = 0;
-
-      while (allData.tweets.length < TARGET_TWEET_COUNT) {
+      while (allData.tweets.length < TARGET_TWEET_COUNT && timeoutCount < TIMEOUT_LIMIT) {
         // Wait for the next response or 3 seconds, whichever comes first
         const response = await Promise.race([
-          page.waitForResponse((response) => response.url().includes("SearchTimeline")),
-          page.waitForTimeout(3000),
+          // includes "SearchTimeline" because it's the endpoint for the search result
+          // or also includes "TweetDetail" because it's the endpoint for the tweet detail
+          page.waitForResponse(
+            (response) => response.url().includes("SearchTimeline") || response.url().includes("TweetDetail")
+          ),
+          page.waitForTimeout(5000),
         ]);
 
         if (response) {
-          const { data: responseBody } = (await response.json()) as { data: TweetResponseData };
+          timeoutCount = 0;
 
-          const tweets = responseBody.search_by_raw_query.search_timeline.timeline?.instructions?.[0]?.entries;
+          let tweets: Entry[] = [];
+
+          let responseJson = await response.json();
+
+          if (responseJson.data.threaded_conversation_with_injections_v2) {
+            tweets = responseJson.data?.threaded_conversation_with_injections_v2.instructions[0].entries;
+          } else {
+            tweets = responseJson.data?.search_by_raw_query.search_timeline.timeline?.instructions?.[0]?.entries;
+          }
 
           if (!tweets) {
             console.error("No more tweets found, please check your search criteria and csv file result");
@@ -179,10 +202,20 @@ export async function crawl({
             .map((tweet) => {
               const isPromotedTweet = tweet.entryId.includes("promoted");
 
-              if (!tweet.content?.itemContent) return null;
+              if (IS_SEARCH_MODE && !tweet?.content?.itemContent?.tweet_results?.result) return null;
+              if (IS_DETAIL_MODE) {
+                if (!tweet?.content?.items?.[0]?.item?.itemContent) return null;
+                const isMentionThreadCreator =
+                  tweet?.content?.items?.[0]?.item?.itemContent?.tweet_results?.result?.legacy?.entities
+                    ?.user_mentions?.[0];
+                if (!isMentionThreadCreator) return null;
+              }
               if (isPromotedTweet) return null;
 
-              const result = tweet.content.itemContent.tweet_results.result;
+              const result = IS_SEARCH_MODE
+                ? tweet.content.itemContent.tweet_results.result
+                : tweet.content.items[0].item.itemContent.tweet_results.result;
+
               if (!result?.core?.user_results) return null;
 
               const tweetContent = result.legacy || result.tweet.legacy;
@@ -212,7 +245,17 @@ export async function crawl({
           const rows = comingTweets.reduce((prev: [], current: (typeof tweetContents)[0]) => {
             const tweet = pick(current.tweet, filteredFields);
 
-            const cleanTweetText = `"${tweet.full_text.replace(/;/g, " ").replace(/\n/g, " ")}"`;
+            let cleanTweetText = `"${tweet.full_text.replace(/;/g, " ").replace(/\n/g, " ")}"`;
+
+            if (IS_DETAIL_MODE) {
+              const firstWord = cleanTweetText.split(" ")[0];
+              const replyToUsername = current.tweet.entities.user_mentions[0].screen_name;
+              // firstWord example: "@someone", the 0 index is " and the 1 index is @
+              if (firstWord[1] === "@") {
+                // remove the first word
+                cleanTweetText = cleanTweetText.replace(`@${replyToUsername} `, "");
+              }
+            }
 
             tweet["full_text"] = cleanTweetText;
             tweet["username"] = current.user.screen_name;
@@ -244,6 +287,11 @@ export async function crawl({
           timeoutCount++;
           console.info(chalk.gray("Scrolling more..."));
 
+          if (timeoutCount > TIMEOUT_LIMIT) {
+            console.info(chalk.yellow("No more tweets found, please check your search criteria and csv file result"));
+            break;
+          }
+
           await page.evaluate(() =>
             window.scrollTo({
               behavior: "smooth",
@@ -252,7 +300,6 @@ export async function crawl({
           );
 
           await scrollAndSave(); // call the function again to resume scrolling
-          break;
         }
 
         await page.evaluate(() =>
