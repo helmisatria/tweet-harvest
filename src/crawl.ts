@@ -47,7 +47,7 @@ type StartCrawlTwitterParams = {
 export async function crawl({
   ACCESS_TOKEN,
   SEARCH_KEYWORDS,
-  TWEET_DETAIL_URL,
+  TWEET_THREAD_URL,
   SEARCH_FROM_DATE,
   SEARCH_TO_DATE,
   TARGET_TWEET_COUNT = 10,
@@ -64,9 +64,9 @@ export async function crawl({
   DELAY_EACH_TWEET_SECONDS?: number;
   DEBUG_MODE?: boolean;
   OUTPUT_FILENAME?: string;
-  TWEET_DETAIL_URL?: string;
+  TWEET_THREAD_URL?: string;
 }) {
-  const CRAWL_MODE = TWEET_DETAIL_URL ? "DETAIL" : "SEARCH";
+  const CRAWL_MODE = TWEET_THREAD_URL ? "DETAIL" : "SEARCH";
   const IS_DETAIL_MODE = CRAWL_MODE === "DETAIL";
   const IS_SEARCH_MODE = CRAWL_MODE === "SEARCH";
   const TIMEOUT_LIMIT = 4;
@@ -123,7 +123,7 @@ export async function crawl({
     twitterSearchUrl = "https://twitter.com/search-advanced?f=live",
   }: StartCrawlTwitterParams = {}) {
     if (IS_DETAIL_MODE) {
-      await page.goto(TWEET_DETAIL_URL);
+      await page.goto(TWEET_THREAD_URL);
     } else {
       await page.goto(twitterSearchUrl);
     }
