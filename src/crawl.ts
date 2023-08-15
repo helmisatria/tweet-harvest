@@ -8,7 +8,7 @@ import { chromium } from "playwright-extra";
 import stealth from "puppeteer-extra-plugin-stealth";
 import { inputKeywords } from "./features/input-keywords";
 import { listenNetworkRequests } from "./features/listen-network-requests";
-import { HEADLESS_MODE } from "./dev";
+import { HEADLESS_MODE } from "./env";
 
 chromium.use(stealth());
 

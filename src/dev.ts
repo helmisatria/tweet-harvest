@@ -1,14 +1,8 @@
 import { config } from "dotenv";
 import { crawl } from "./crawl";
-import { parseEnv } from "znv";
-import { z } from "zod";
+import { ACCESS_TOKEN } from "./env";
 
 config();
-
-export const { DEV_ACCESS_TOKEN: ACCESS_TOKEN, HEADLESS_MODE } = parseEnv(process.env, {
-  DEV_ACCESS_TOKEN: z.string().min(1),
-  HEADLESS_MODE: z.boolean().default(true),
-});
 
 crawl({
   ACCESS_TOKEN: ACCESS_TOKEN,
