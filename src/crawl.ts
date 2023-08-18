@@ -171,7 +171,8 @@ export async function crawl({
 
           let responseJson = await response.json();
 
-          if (responseJson.data.threaded_conversation_with_injections_v2) {
+          const isTweetDetail = responseJson.data.threaded_conversation_with_injections_v2;
+          if (isTweetDetail) {
             tweets = responseJson.data?.threaded_conversation_with_injections_v2.instructions[0].entries;
           } else {
             tweets = responseJson.data?.search_by_raw_query.search_timeline.timeline?.instructions?.[0]?.entries;
@@ -216,11 +217,11 @@ export async function crawl({
                 ? tweet.content.itemContent.tweet_results.result
                 : tweet.content.items[0].item.itemContent.tweet_results.result;
 
-              if (!result?.core?.user_results) return null;
+              if (!result.tweet?.core?.user_results && !result.core?.user_results) return null;
 
               const tweetContent = result.legacy || result.tweet.legacy;
               const userContent =
-                result.core.user_results.result.legacy || result.tweet.core.user_results.result.legacy;
+                result.core?.user_results?.result?.legacy || result.tweet.core.user_results.result.legacy;
 
               return {
                 tweet: tweetContent,
