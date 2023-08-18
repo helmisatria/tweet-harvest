@@ -36,6 +36,11 @@ async function run() {
         describe: "Search keyword",
         type: "string",
       },
+      tweet_thread_url: {
+        alias: "thread",
+        describe: "Tweet thread URL",
+        type: "string",
+      },
       limit: {
         alias: "l",
         describe: "Limit number of tweets to crawl",
@@ -74,7 +79,7 @@ async function run() {
     });
   }
 
-  if (!argv.search_keyword) {
+  if (!argv.search_keyword && !argv.tweet_thread_url) {
     questions.push({
       type: "text",
       name: "search_keyword",

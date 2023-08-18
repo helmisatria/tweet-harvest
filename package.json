@@ -1,7 +1,7 @@
 {
   "name": "tweet-harvest",
   "description": "A Twitter crawler helper with auth",
-  "version": "2.1.1",
+  "version": "2.2.5",
   "license": "MIT",
   "author": "Helmi Satria",
   "publishConfig": {
@@ -13,7 +13,8 @@
     "url": "https://github.com/helmisatria/tweet-harvest.git"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "!dist/dev.js"
   ],
   "dependencies": {
     "@playwright/test": "^1.33.0",
@@ -24,7 +25,9 @@
     "playwright-extra": "^4.3.6",
     "prompts": "^2.4.2",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "znv": "^0.3.2",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.194",
@@ -33,19 +36,16 @@
     "pkg": "^5.8.1",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
-    "typescript": "*",
-    "znv": "^0.3.2",
-    "zod": "^3.21.4"
+    "typescript": "*"
   },
   "bin": {
     "tweet-harvest": "./dist/bin.js"
   },
   "scripts": {
     "start": "ts-node src/crawl.ts",
-    "dev": "ts-node-dev src/dev.ts",
+    "dev": "npx tsx src/dev.ts",
     "build": "tsc",
     "build:pkg": "pkg . --out-path ./bin",
-    "prepublish": "pnpm build",
-    "publish": "npm publish --access public"
+    "prepublish": "pnpm build"
   }
 }
