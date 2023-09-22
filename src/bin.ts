@@ -139,6 +139,7 @@ async function run() {
     crawl({
       ACCESS_TOKEN: argv.token,
       SEARCH_KEYWORDS: argv.search_keyword,
+      TWEET_THREAD_URL: argv.tweet_thread_url,
       SEARCH_FROM_DATE: argv.from,
       SEARCH_TO_DATE: argv.to,
       TARGET_TWEET_COUNT: argv.limit,

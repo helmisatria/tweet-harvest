@@ -169,7 +169,20 @@ export async function crawl({
 
           let tweets: Entry[] = [];
 
-          let responseJson = await response.json();
+          let responseJson;
+
+          try {
+            responseJson = await response.json();
+          } catch (error) {
+            if ((await response.text()).toLowerCase().includes("rate limit")) {
+              console.error(`Error parsing response json: ${JSON.stringify(response)}`);
+              console.error(
+                `Most likely, you have already exceeded the Twitter rate limit. Read more on https://twitter.com/elonmusk/status/1675187969420828672?s=46.`
+              );
+            }
+
+            break;
+          }
 
           const isTweetDetail = responseJson.data.threaded_conversation_with_injections_v2;
           if (isTweetDetail) {
