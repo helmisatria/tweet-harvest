@@ -174,7 +174,7 @@ export async function crawl({
           try {
             responseJson = await response.json();
           } catch (error) {
-            if ((await response.text()).includes("Rate limit")) {
+            if ((await response.text()).toLowerCase().includes("rate limit")) {
               console.error(`Error parsing response json: ${JSON.stringify(response)}`);
               console.error(
                 `Most likely, you have already exceeded the Twitter rate limit. Read more on https://twitter.com/elonmusk/status/1675187969420828672?s=46.`
