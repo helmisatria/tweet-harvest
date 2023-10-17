@@ -53,6 +53,7 @@ export async function crawl({
   TARGET_TWEET_COUNT = 10,
   // default delay each tweet activity: 3 seconds
   DELAY_EACH_TWEET_SECONDS = 3,
+  DELAY_EVERY_100_TWEETS_SECONDS = 10,
   DEBUG_MODE,
   OUTPUT_FILENAME,
 }: {
@@ -62,6 +63,7 @@ export async function crawl({
   SEARCH_TO_DATE?: string;
   TARGET_TWEET_COUNT?: number;
   DELAY_EACH_TWEET_SECONDS?: number;
+  DELAY_EVERY_100_TWEETS_SECONDS?: number;
   DEBUG_MODE?: boolean;
   OUTPUT_FILENAME?: string;
   TWEET_THREAD_URL?: string;
@@ -179,6 +181,13 @@ export async function crawl({
               console.error(
                 `Most likely, you have already exceeded the Twitter rate limit. Read more on https://twitter.com/elonmusk/status/1675187969420828672?s=46.`
               );
+
+              // wait 1min
+              await page.waitForTimeout(60_000);
+
+              // click retry
+              await page.click("text=Retry");
+              return await scrollAndSave(); // recursive call
             }
 
             break;
@@ -292,8 +301,10 @@ export async function crawl({
           // for every multiple of 100, wait for 5 seconds
           if (additionalTweetsCount > 100) {
             additionalTweetsCount = 0;
-            console.info(chalk.gray("\n--Taking a break, waiting for 10 seconds..."));
-            await page.waitForTimeout(10_000);
+            if (DELAY_EVERY_100_TWEETS_SECONDS) {
+              console.info(chalk.gray(`\n--Taking a break, waiting for ${DELAY_EVERY_100_TWEETS_SECONDS} seconds...`));
+              await page.waitForTimeout(DELAY_EVERY_100_TWEETS_SECONDS * 1000);
+            }
           } else if (additionalTweetsCount > 20) {
             await page.waitForTimeout(DELAY_EACH_TWEET_SECONDS * 1000);
           }
