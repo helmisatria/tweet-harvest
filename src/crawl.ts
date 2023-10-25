@@ -10,6 +10,7 @@ import { inputKeywords } from "./features/input-keywords";
 import { listenNetworkRequests } from "./features/listen-network-requests";
 import { calculateForRateLimit } from "./features/exponential-backoff";
 import { HEADLESS_MODE } from "./env";
+import { TWITTER_SEARCH_ADVANCED_URL } from "./constants";
 
 chromium.use(stealth());
 
@@ -57,6 +58,7 @@ export async function crawl({
   DELAY_EVERY_100_TWEETS_SECONDS = 10,
   DEBUG_MODE,
   OUTPUT_FILENAME,
+  SEARCH_TAB = "LATEST",
 }: {
   ACCESS_TOKEN: string;
   SEARCH_KEYWORDS?: string;
@@ -68,8 +70,11 @@ export async function crawl({
   DEBUG_MODE?: boolean;
   OUTPUT_FILENAME?: string;
   TWEET_THREAD_URL?: string;
+  SEARCH_TAB?: "LATEST" | "TOP";
 }) {
   const CRAWL_MODE = TWEET_THREAD_URL ? "DETAIL" : "SEARCH";
+  const SWITCHED_SEARCH_TAB = SEARCH_TAB === "TOP" ? "LATEST" : "TOP";
+
   const IS_DETAIL_MODE = CRAWL_MODE === "DETAIL";
   const IS_SEARCH_MODE = CRAWL_MODE === "SEARCH";
   const TIMEOUT_LIMIT = 4;
@@ -94,7 +99,7 @@ export async function crawl({
     fs.renameSync(FILE_NAME, FILE_NAME.replace(".csv", ".old.csv"));
   }
 
-  let TWEETS_NOT_FOUND_ON_LIVE_TAB = false;
+  let TWEETS_NOT_FOUND_ON_CURRENT_TAB = false;
 
   const browser = await chromium.launch({ headless: HEADLESS_MODE });
 
@@ -123,7 +128,7 @@ export async function crawl({
   listenNetworkRequests(page);
 
   async function startCrawlTwitter({
-    twitterSearchUrl = "https://twitter.com/search-advanced?f=live",
+    twitterSearchUrl = TWITTER_SEARCH_ADVANCED_URL[SEARCH_TAB],
   }: StartCrawlTwitterParams = {}) {
     if (IS_DETAIL_MODE) {
       await page.goto(TWEET_THREAD_URL);
@@ -214,7 +219,7 @@ export async function crawl({
           if (!tweets.length) {
             // found text "not found" on the page
             if (await page.getByText("No results for").count()) {
-              TWEETS_NOT_FOUND_ON_LIVE_TAB = true;
+              TWEETS_NOT_FOUND_ON_CURRENT_TAB = true;
               console.info("No tweets found for the search criteria");
               break;
             }
@@ -354,11 +359,11 @@ export async function crawl({
   try {
     await startCrawlTwitter();
 
-    if (TWEETS_NOT_FOUND_ON_LIVE_TAB && (SEARCH_FROM_DATE || SEARCH_TO_DATE)) {
-      console.info('No tweets found on "Latest" tab, trying "Top" tab...');
+    if (TWEETS_NOT_FOUND_ON_CURRENT_TAB && (SEARCH_FROM_DATE || SEARCH_TO_DATE)) {
+      console.info(`No tweets found on "${SEARCH_TAB}" tab, trying "${SWITCHED_SEARCH_TAB}" tab...`);
 
       await startCrawlTwitter({
-        twitterSearchUrl: "https://twitter.com/search-advanced",
+        twitterSearchUrl: TWITTER_SEARCH_ADVANCED_URL[SWITCHED_SEARCH_TAB],
       });
     }
   } catch (error) {
