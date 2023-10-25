@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.3.0 (2023-10-25)
+
+### Added
+
+- Implemented optional exponential backoff for rate limit handling. The wait time between retries will now be calculated dynamically based on the number of attempts made, resulting in fewer requests during the rate-limit window. This should help to reduce the risk of account bans. To utilize this feature, set the `ENABLE_EXPONENTIAL_BACKOFF` environment variable to true.
+
+### Changed
+
+- In absence of the `ENABLE_EXPONENTIAL_BACKOFF` setting or when it is set to false, the rate limit handling will default to the previous flat 1-minute retry timeout.
+
+### Notes
+
+- While the new optional feature greatly minimizes the risk of account bans due to rate limit exceptions, it might not be suitable for all use cases due to increased wait times between the retries. Consider your scenario before enabling this feature.
+- Kudos to @alvinmatias69 for the contribution!
+
 ## 2.2.8 (2023-10-17)
 
 ### Changes

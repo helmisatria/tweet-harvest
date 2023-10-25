@@ -8,6 +8,7 @@ import { chromium } from "playwright-extra";
 import stealth from "puppeteer-extra-plugin-stealth";
 import { inputKeywords } from "./features/input-keywords";
 import { listenNetworkRequests } from "./features/listen-network-requests";
+import { calculateForRateLimit } from "./features/exponential-backoff";
 import { HEADLESS_MODE } from "./env";
 
 chromium.use(stealth());
@@ -149,6 +150,8 @@ export async function crawl({
 
     let timeoutCount = 0;
     let additionalTweetsCount = 0;
+    // count how many rate limit exception got raised
+    let rateLimitCount = 0;
 
     const allData = {
       tweets: [],
@@ -182,8 +185,8 @@ export async function crawl({
                 `Most likely, you have already exceeded the Twitter rate limit. Read more on https://twitter.com/elonmusk/status/1675187969420828672?s=46.`
               );
 
-              // wait 1min
-              await page.waitForTimeout(60_000);
+              // wait for rate limit window passed before retrying
+              await page.waitForTimeout(calculateForRateLimit(rateLimitCount++));
 
               // click retry
               await page.click("text=Retry");
@@ -192,6 +195,9 @@ export async function crawl({
 
             break;
           }
+
+          // reset the rate limit exception count
+          rateLimitCount = 0;
 
           const isTweetDetail = responseJson.data.threaded_conversation_with_injections_v2;
           if (isTweetDetail) {
