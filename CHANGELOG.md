@@ -4,6 +4,12 @@
 
 ### Added
 
+- Add `SEARCH_TAB` or `--search-tab` or `--tab` option to specify the tab to search for tweets. Default is `LATEST` tab. The options are `LATEST` and `TOP`.
+
+## 2.3.0 (2023-10-25)
+
+### Added
+
 - Implemented optional exponential backoff for rate limit handling. The wait time between retries will now be calculated dynamically based on the number of attempts made, resulting in fewer requests during the rate-limit window. This should help to reduce the risk of account bans. To utilize this feature, set the `ENABLE_EXPONENTIAL_BACKOFF` environment variable to true.
 
 ### Changed

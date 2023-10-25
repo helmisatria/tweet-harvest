@@ -58,6 +58,12 @@ async function run() {
         describe: "Output filename",
         type: "string",
       },
+      search_tab: {
+        alias: "tab",
+        describe: "Search tab (TOP or LATEST)",
+        default: "LATEST",
+        choices: ["TOP", "LATEST"],
+      },
     })
     .help()
     .alias("help", "h").argv;
@@ -145,6 +151,7 @@ async function run() {
       TARGET_TWEET_COUNT: argv.limit,
       DELAY_EACH_TWEET_SECONDS: argv.delay_each_tweet,
       OUTPUT_FILENAME: argv.output_filename,
+      SEARCH_TAB: String(argv.search_tab).toUpperCase() as "TOP" | "LATEST",
     });
   } catch (err) {
     console.error("Error running script:", err);
