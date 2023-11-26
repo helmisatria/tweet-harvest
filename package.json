@@ -1,7 +1,7 @@
 {
   "name": "tweet-harvest",
   "description": "A Twitter crawler helper with auth",
-  "version": "2.4.0",
+  "version": "2.4.2",
   "license": "MIT",
   "author": "Helmi Satria",
   "publishConfig": {
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/helmisatria/tweet-harvest.git"
+    "url": "git+https://github.com/helmisatria/tweet-harvest.git"
   },
   "files": [
     "dist/",
@@ -39,7 +39,7 @@
     "typescript": "*"
   },
   "bin": {
-    "tweet-harvest": "./dist/bin.js"
+    "tweet-harvest": "dist/bin.js"
   },
   "scripts": {
     "start": "ts-node src/crawl.ts",
