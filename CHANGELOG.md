@@ -1,6 +1,15 @@
 # Changelog
 
-## 2.3.0 (2023-10-25)
+## 2.4.1 (2023-11-26)
+
+### Changes
+
+- Fixed inconsistent delimiter and CSV formatting in crawl functionality.
+- The delimiter has been standardized to use commas consistently throughout the CSV file.
+- Ensured proper conversion of object values to strings in the crawl functionality.
+- Improved CSV formatting and enhanced reliability of data extraction from Twitter data.
+
+## 2.4.0 (2023-10-25)
 
 ### Added
 

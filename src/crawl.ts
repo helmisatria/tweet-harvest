@@ -46,6 +46,18 @@ type StartCrawlTwitterParams = {
   twitterSearchUrl?: string;
 };
 
+function convertValuesToStrings(obj) {
+  const result = {};
+  for (const key in obj) {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      result[key] = convertValuesToStrings(obj[key]); // Recursively convert nested object values
+    } else {
+      result[key] = `"${String(obj[key])}"`;
+    }
+  }
+  return result;
+}
+
 export async function crawl({
   ACCESS_TOKEN,
   SEARCH_KEYWORDS,
@@ -225,7 +237,7 @@ export async function crawl({
             }
           }
 
-          const headerRow = filteredFields.join(";") + "\n";
+          const headerRow = filteredFields.join(",") + "\n";
 
           if (!headerWritten) {
             headerWritten = true;
@@ -279,7 +291,7 @@ export async function crawl({
           const rows = comingTweets.reduce((prev: [], current: (typeof tweetContents)[0]) => {
             const tweet = pick(current.tweet, filteredFields);
 
-            let cleanTweetText = `"${tweet.full_text.replace(/;/g, " ").replace(/\n/g, " ")}"`;
+            let cleanTweetText = `${tweet.full_text.replace(/,/g, " ").replace(/\n/g, " ")}`;
 
             if (IS_DETAIL_MODE) {
               const firstWord = cleanTweetText.split(" ")[0];
@@ -295,7 +307,7 @@ export async function crawl({
             tweet["username"] = current.user.screen_name;
             tweet["tweet_url"] = `https://twitter.com/${current.user.screen_name}/status/${tweet.id_str}`;
 
-            const row = Object.values(tweet).join(";");
+            const row = Object.values(convertValuesToStrings(tweet)).join(",");
 
             return [...prev, row];
           }, []);
