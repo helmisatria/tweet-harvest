@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.4.2 (2023-11-26)
+
+### Changes
+
+- Add image_url to the output CSV file (if exists).
+- Add location to the output CSV file (if exists).
+
 ## 2.4.1 (2023-11-26)
 
 ### Changes

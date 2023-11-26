@@ -29,6 +29,7 @@ interface TweetContent {
     conversation_id_str: string;
     display_text_range: number[];
     entities: {
+      media: any[];
       user_mentions: any[];
       urls: any[];
       hashtags: any[];

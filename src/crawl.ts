@@ -40,6 +40,8 @@ const filteredFields = [
   "conversation_id_str",
   "username",
   "tweet_url",
+  "image_url",
+  "location",
 ];
 
 type StartCrawlTwitterParams = {
@@ -237,7 +239,7 @@ export async function crawl({
             }
           }
 
-          const headerRow = filteredFields.join(",") + "\n";
+          const headerRow = filteredFields.map((field) => `"${field}"`).join(",") + "\n";
 
           if (!headerWritten) {
             headerWritten = true;
@@ -306,6 +308,8 @@ export async function crawl({
             tweet["full_text"] = cleanTweetText;
             tweet["username"] = current.user.screen_name;
             tweet["tweet_url"] = `https://twitter.com/${current.user.screen_name}/status/${tweet.id_str}`;
+            tweet["image_url"] = current.tweet.entities?.media?.[0]?.media_url_https || "";
+            tweet["location"] = current.user.location || "";
 
             const row = Object.values(convertValuesToStrings(tweet)).join(",");
 
