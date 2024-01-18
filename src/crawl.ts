@@ -10,11 +10,18 @@ import { inputKeywords } from "./features/input-keywords";
 import { listenNetworkRequests } from "./features/listen-network-requests";
 import { calculateForRateLimit } from "./features/exponential-backoff";
 import { HEADLESS_MODE } from "./env";
-import { TWITTER_SEARCH_ADVANCED_URL } from "./constants";
+import {
+  FILTERED_FIELDS,
+  FOLDER_DESTINATION,
+  FUlL_PATH_FOLDER_DESTINATION,
+  NOW,
+  TWITTER_SEARCH_ADVANCED_URL,
+} from "./constants";
+import { CACHE_KEYS, cache } from "./cache";
+import { scrollDown } from "./helpers/page.helper";
 
 chromium.use(stealth());
 
-const NOW = dayjs().format("DD-MM-YYYY HH-mm-ss");
 let headerWritten = false;
 
 function appendCsv(pathStr: string, contents: any, cb?) {
@@ -26,23 +33,6 @@ function appendCsv(pathStr: string, contents: any, cb?) {
 
   return fileName;
 }
-
-const filteredFields = [
-  "created_at",
-  "id_str",
-  "full_text",
-  "quote_count",
-  "reply_count",
-  "retweet_count",
-  "favorite_count",
-  "lang",
-  "user_id_str",
-  "conversation_id_str",
-  "username",
-  "tweet_url",
-  "image_url",
-  "location",
-];
 
 type StartCrawlTwitterParams = {
   twitterSearchUrl?: string;
@@ -60,6 +50,20 @@ function convertValuesToStrings(obj) {
   return result;
 }
 
+export type CrawlParams = {
+  ACCESS_TOKEN: string;
+  SEARCH_KEYWORDS?: string;
+  SEARCH_FROM_DATE?: string;
+  SEARCH_TO_DATE?: string;
+  TARGET_TWEET_COUNT?: number;
+  DELAY_EACH_TWEET_SECONDS?: number;
+  DELAY_EVERY_100_TWEETS_SECONDS?: number;
+  DEBUG_MODE?: boolean;
+  OUTPUT_FILENAME?: string;
+  TWEET_THREAD_URL?: string;
+  SEARCH_TAB?: "LATEST" | "TOP";
+};
+
 export async function crawl({
   ACCESS_TOKEN,
   SEARCH_KEYWORDS,
@@ -73,35 +77,19 @@ export async function crawl({
   DEBUG_MODE,
   OUTPUT_FILENAME,
   SEARCH_TAB = "LATEST",
-}: {
-  ACCESS_TOKEN: string;
-  SEARCH_KEYWORDS?: string;
-  SEARCH_FROM_DATE?: string;
-  SEARCH_TO_DATE?: string;
-  TARGET_TWEET_COUNT?: number;
-  DELAY_EACH_TWEET_SECONDS?: number;
-  DELAY_EVERY_100_TWEETS_SECONDS?: number;
-  DEBUG_MODE?: boolean;
-  OUTPUT_FILENAME?: string;
-  TWEET_THREAD_URL?: string;
-  SEARCH_TAB?: "LATEST" | "TOP";
-}) {
+}: CrawlParams) {
   const CRAWL_MODE = TWEET_THREAD_URL ? "DETAIL" : "SEARCH";
   const SWITCHED_SEARCH_TAB = SEARCH_TAB === "TOP" ? "LATEST" : "TOP";
 
   const IS_DETAIL_MODE = CRAWL_MODE === "DETAIL";
   const IS_SEARCH_MODE = CRAWL_MODE === "SEARCH";
-  const TIMEOUT_LIMIT = 4;
+  const TIMEOUT_LIMIT = 40;
 
   let MODIFIED_SEARCH_KEYWORDS = SEARCH_KEYWORDS;
 
   const CURRENT_PACKAGE_VERSION = require("../package.json").version;
 
-  // change spaces to _
-  const FOLDER_DESTINATION = "./tweets-data";
-  const FUlL_PATH_FOLDER_DESTINATION = path.resolve(FOLDER_DESTINATION);
   const filename = (OUTPUT_FILENAME || `${SEARCH_KEYWORDS} ${NOW}`).trim().replace(".csv", "");
-
   const FILE_NAME = `${FOLDER_DESTINATION}/${filename}.csv`.replace(/ /g, "_").replace(/:/g, "-");
 
   console.info(chalk.blue("\nOpening twitter search page...\n"));
@@ -185,7 +173,7 @@ export async function crawl({
           page.waitForResponse(
             (response) => response.url().includes("SearchTimeline") || response.url().includes("TweetDetail")
           ),
-          page.waitForTimeout(5000),
+          page.waitForTimeout(800),
         ]);
 
         if (response) {
@@ -198,6 +186,8 @@ export async function crawl({
           try {
             responseJson = await response.json();
           } catch (error) {
+            cache.set(CACHE_KEYS.GOT_TWEETS, false);
+
             if ((await response.text()).toLowerCase().includes("rate limit")) {
               console.error(`Error parsing response json: ${JSON.stringify(response)}`);
               console.error(
@@ -239,7 +229,9 @@ export async function crawl({
             }
           }
 
-          const headerRow = filteredFields.map((field) => `"${field}"`).join(",") + "\n";
+          cache.set(CACHE_KEYS.GOT_TWEETS, true);
+
+          const headerRow = FILTERED_FIELDS.map((field) => `"${field}"`).join(",") + "\n";
 
           if (!headerWritten) {
             headerWritten = true;
@@ -291,7 +283,7 @@ export async function crawl({
           }
 
           const rows = comingTweets.reduce((prev: [], current: (typeof tweetContents)[0]) => {
-            const tweet = pick(current.tweet, filteredFields);
+            const tweet = pick(current.tweet, FILTERED_FIELDS);
 
             let cleanTweetText = `${tweet.full_text.replace(/,/g, " ").replace(/\n/g, " ")}`;
 
@@ -319,7 +311,7 @@ export async function crawl({
           const csv = (rows as []).join("\n") + "\n";
           const fullPathFilename = appendCsv(FILE_NAME, csv);
 
-          console.info(chalk.blue(`Your tweets saved to: ${fullPathFilename}`));
+          console.info(chalk.blue(`\n\nYour tweets saved to: ${fullPathFilename}`));
 
           // progress:
           console.info(chalk.yellow(`Total tweets saved: ${allData.tweets.length}`));
@@ -335,34 +327,35 @@ export async function crawl({
           } else if (additionalTweetsCount > 20) {
             await page.waitForTimeout(DELAY_EACH_TWEET_SECONDS * 1000);
           }
-        } else {
-          timeoutCount++;
-          console.info(chalk.gray("Scrolling more..."));
 
-          if (timeoutCount > TIMEOUT_LIMIT) {
-            console.info(chalk.yellow("No more tweets found, please check your search criteria and csv file result"));
-            break;
+          cache.set(CACHE_KEYS.GOT_TWEETS, false);
+        } else {
+          if (cache.get(CACHE_KEYS.GOT_TWEETS) === false) {
+            timeoutCount++;
+
+            if (timeoutCount === 1) {
+              process.stdout.write(chalk.gray(`\n-- Scrolling... (${timeoutCount})`));
+            } else {
+              process.stdout.write(chalk.gray(` (${timeoutCount})`));
+            }
+
+            if (timeoutCount > TIMEOUT_LIMIT) {
+              console.info(chalk.yellow("No more tweets found, please check your search criteria and csv file result"));
+              break;
+            }
           }
 
-          await page.evaluate(() =>
-            window.scrollTo({
-              behavior: "smooth",
-              top: 10_000 * 9_000,
-            })
-          );
-
+          await scrollDown(page);
           await scrollAndSave(); // call the function again to resume scrolling
         }
 
-        await page.evaluate(() =>
-          window.scrollTo({
-            behavior: "smooth",
-            top: 10_000 * 9_000,
-          })
-        );
+        await scrollDown(page);
       }
     }
 
+    /**
+     * Initial scroll and save tweets then it will do recursive call
+     */
     await scrollAndSave();
 
     if (allData.tweets.length) {
