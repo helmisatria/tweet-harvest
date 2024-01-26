@@ -49,7 +49,6 @@
     "start": "ts-node src/crawl.ts",
     "dev": "npx tsx src/dev.ts",
     "build": "tsup",
-    "build:pkg": "pkg . --out-path ./bin",
     "prepublish": "pnpm build",
     "publish": "pnpm publish"
   }
