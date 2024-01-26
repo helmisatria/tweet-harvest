@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.5.0 (2024-01-19)
+
+### Changes
+
+- Faster (lower scroll's pause time) and more large acceptable timeout so when the network is slow, the crawler can still work.
+- Remove displayed image/video whenever possible to reduce amount of scrolls.
+- Reduce number of unncecessary logs
+
 ## 2.4.2 (2023-11-26)
 
 ### Changes

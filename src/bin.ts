@@ -1,157 +1,106 @@
 #!/usr/bin/env node
+
+import { Command, Option } from "commander";
+const program = new Command();
 import { crawl } from "./crawl";
-import { execSync } from "child_process";
-import prompts from "prompts";
 import chalk from "chalk";
-import yargs from "yargs";
+import prompts from "prompts";
+import fs from "fs";
+import path from "path";
 
-async function run() {
-  console.log(chalk.bold("\nWelcome to the Twitter Crawler 🕷️\n"));
-  console.log("This script uses Chromium Browser to crawl data from Twitter with *your* Twitter auth token.");
-  console.log("Please enter your Twitter auth token when prompted.\n");
-  console.log("Note: Keep your access token secret! Don't share it with anyone else.");
-  console.log("Note: This script only runs on your local device.\n");
+const version = fs.readFileSync(path.join(__dirname, "..", "package.json"), "utf8").match(/"version": "(.*?)"/)[1];
 
-  const questions: prompts.PromptObject[] = [];
+program.name("npx tweet-harvest").version(version);
 
-  const argv: any = yargs
-    .usage("Usage: $0 [options]")
-    .options({
-      token: {
-        describe: "Twitter auth token",
-        type: "string",
-      },
-      from: {
-        alias: "f",
-        describe: "From date (DD-MM-YYYY)",
-        type: "string",
-      },
-      to: {
-        alias: "t",
-        describe: "To date (DD-MM-YYYY)",
-        type: "string",
-      },
-      search_keyword: {
-        alias: "s",
-        describe: "Search keyword",
-        type: "string",
-      },
-      tweet_thread_url: {
-        alias: "thread",
-        describe: "Tweet thread URL",
-        type: "string",
-      },
-      limit: {
-        alias: "l",
-        describe: "Limit number of tweets to crawl",
-        type: "number",
-      },
-      delay: {
-        alias: "d",
-        describe: "Delay between each tweet (in seconds)",
-        type: "number",
-        default: 3,
-      },
-      debug: {},
-      output_filename: {
-        alias: "o",
-        describe: "Output filename",
-        type: "string",
-      },
-      search_tab: {
-        alias: "tab",
-        describe: "Search tab (TOP or LATEST)",
-        default: "LATEST",
-        choices: ["TOP", "LATEST"],
-      },
-    })
-    .help()
-    .alias("help", "h").argv;
+program
+  .addOption(new Option("-t, --token <type>", "Twitter auth token"))
+  .addOption(new Option("-f, --from <type>", "From date (DD-MM-YYYY)"))
+  .addOption(new Option("-to, --to <type>", "To date (DD-MM-YYYY)"))
+  .addOption(new Option("-s, --search-keyword <type>", "Search keyword"))
+  .addOption(new Option("--thread <type>", "Tweet thread URL"))
+  .addOption(new Option("-l, --limit <number>", "Limit number of tweets to crawl").argParser(parseInt))
+  .addOption(new Option("-d, --delay <number>", "Delay between each tweet (in seconds)").default(3).argParser(parseInt))
+  .addOption(new Option("-o, --output-filename <type>", "Output filename"))
+  .addOption(new Option("--tab <type>", "Search tab").choices(["TOP", "LATEST"]).default("TOP"));
 
-  if (!argv.token) {
+function showWelcomeMessage() {
+  console.log(chalk.bold.green(`Tweet Harvest [v${version}]\n`));
+  console.log(
+    chalk.blue("Research by ") +
+      chalk.bold.blue("Helmi Satria") +
+      chalk.blue("\nUse it for Educational Purposes only!\n")
+  );
+  console.log(
+    chalk.yellow(
+      `This script uses Chromium Browser to crawl data from Twitter with ${chalk.bold("your Twitter auth token")}.`
+    )
+  );
+  console.log(chalk.yellow("Please enter your Twitter auth token when prompted.\n"));
+  console.log(chalk.red.bold("Note:") + " Keep your access token secret! Don't share it with anyone else.");
+  console.log(chalk.red.bold("Note:") + " This script only runs on your local device.\n");
+}
+
+async function main() {
+  showWelcomeMessage();
+
+  program.parse(process.argv);
+  const options = program.opts();
+
+  let needPrompts = false;
+  const questions = [];
+
+  if (!options.token) {
+    needPrompts = true;
     questions.push({
       type: "password",
-      name: "auth_token",
+      name: "token",
       message: `What's your Twitter auth token?`,
-      validate: (value) => {
-        if (value.length < 1) {
-          return "Please enter your Twitter auth token";
-        } else if (value.length < 30) {
-          return "Please enter a valid Twitter auth token";
-        }
-
-        return true;
-      },
+      validate: (value) => (value.length >= 30 ? true : "Please enter a valid Twitter auth token"),
     });
   }
 
-  if (!argv.search_keyword && !argv.tweet_thread_url) {
+  if (!options.searchKeyword && !options.thread) {
+    needPrompts = true;
     questions.push({
       type: "text",
-      name: "search_keyword",
+      name: "searchKeyword",
       message: "What's the search keyword?",
-      validate: (value) => {
-        if (value.length < 1) {
-          return "Please enter a search keyword";
-        }
-        return true;
-      },
+      validate: (value) => (value.length > 0 ? true : "Please enter a search keyword"),
     });
   }
 
-  if (!argv.limit) {
+  if (!options.limit) {
+    needPrompts = true;
     questions.push({
       type: "number",
-      name: "target_tweet_count",
+      name: "limit",
       message: "How many tweets do you want to crawl?",
-      validate: (value) => {
-        if (value < 1) {
-          return "Please enter a number greater than 0";
-        }
-        return true;
-      },
+      validate: (value) => (value > 0 ? true : "Please enter a number greater than 0"),
     });
   }
 
-  const answers = await prompts(questions, {
-    onCancel: () => {
-      console.info("Exiting...");
-      process.exit(0);
-    },
-  });
+  if (needPrompts) {
+    const answers = await prompts(questions, {
+      onCancel: () => {
+        console.info("Exiting...");
+        process.exit(0);
+      },
+    });
 
-  if (!argv.token) {
-    argv.token = answers.auth_token;
-  }
-
-  if (!argv.search_keyword) {
-    argv.search_keyword = answers.search_keyword;
-  }
-
-  if (!argv.limit) {
-    argv.limit = answers.target_tweet_count;
+    Object.assign(options, answers);
   }
 
   try {
-    // Run `npx playwright install` to install the Playwright dependencies
-    const output = execSync("npx playwright --version").toString();
-    execSync("npm i @playwright/test", { stdio: "inherit" });
-    execSync("npx playwright install chromium --with-deps", { stdio: "inherit" });
-    if (!output.includes("Version")) {
-      console.log("Installing required playwright browser dependencies... Please wait, this will take a while");
-    }
-
-    // Call the `crawl` function with the access token
     crawl({
-      ACCESS_TOKEN: argv.token,
-      SEARCH_KEYWORDS: argv.search_keyword,
-      TWEET_THREAD_URL: argv.tweet_thread_url,
-      SEARCH_FROM_DATE: argv.from,
-      SEARCH_TO_DATE: argv.to,
-      TARGET_TWEET_COUNT: argv.limit,
-      DELAY_EACH_TWEET_SECONDS: argv.delay_each_tweet,
-      OUTPUT_FILENAME: argv.output_filename,
-      SEARCH_TAB: String(argv.search_tab).toUpperCase() as "TOP" | "LATEST",
+      ACCESS_TOKEN: options.token,
+      SEARCH_KEYWORDS: options.searchKeyword,
+      TWEET_THREAD_URL: options.thread,
+      SEARCH_FROM_DATE: options.from,
+      SEARCH_TO_DATE: options.to,
+      TARGET_TWEET_COUNT: options.limit,
+      DELAY_EACH_TWEET_SECONDS: options.delay,
+      OUTPUT_FILENAME: options.outputFilename,
+      SEARCH_TAB: options.tab.toUpperCase(),
     });
   } catch (err) {
     console.error("Error running script:", err);
@@ -159,4 +108,4 @@ async function run() {
   }
 }
 
-run();
+main();
