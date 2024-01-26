@@ -50,6 +50,6 @@
     "dev": "npx tsx src/dev.ts",
     "build": "tsup",
     "prepublish": "pnpm build",
-    "publish": "pnpm publish"
+    "publish": "pnpm publish --no-git-checks"
   }
 }

@@ -39,6 +39,6 @@ jobs:
         run: pnpm install
 
       - name: Publish to npmjs
-        run: pnpm publish --no-git-checks
+        run: pnpm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
