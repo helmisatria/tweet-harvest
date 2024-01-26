@@ -3,7 +3,7 @@ import path from "path";
 
 export const TWITTER_SEARCH_ADVANCED_URL = {
   TOP: "https://twitter.com/search-advanced",
-  LATEST: "https://twitter.com/search-advanced",
+  LATEST: "https://twitter.com/search-advanced?f=live",
 };
 
 export const NOW = dayjs().format("DD-MM-YYYY HH-mm-ss");
@@ -24,6 +24,7 @@ export const FILTERED_FIELDS = [
   "conversation_id_str",
   "username",
   "tweet_url",
+  "in_reply_to_screen_name",
   "image_url",
   "location",
 ];

@@ -1,4 +1,5 @@
 import { Page } from "@playwright/test";
+import chalk from "chalk";
 
 export const scrollDown = async (page: Page): Promise<void> => {
   await page.evaluate(() =>
@@ -16,4 +17,10 @@ export const scrollDown = async (page: Page): Promise<void> => {
 
   // delete element from page based on tag: data-testid="tweetPhoto"
   await page.evaluate(() => document.querySelectorAll("div[data-testid='tweetPhoto']").forEach((el) => el.remove()));
+};
+
+export const logError = (message: string): void => {
+  const appVersion = require("../../package.json").version;
+  const messageWithVersion = `${chalk.gray(`[v${appVersion}]`)} ${message}`;
+  console.error(messageWithVersion);
 };
