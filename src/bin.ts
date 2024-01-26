@@ -27,7 +27,7 @@ function showWelcomeMessage() {
   console.log(chalk.bold.green(`Tweet Harvest [v${version}]\n`));
   console.log(
     chalk.blue("Research by ") +
-      chalk.bold.blue("Helmi Satria https://twitter.com/helmisatria_") +
+      chalk.bold.blue("Helmi Satria") +
       chalk.blue("\nUse it for Educational Purposes only!\n")
   );
   console.log(
