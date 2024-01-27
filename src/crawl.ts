@@ -18,17 +18,26 @@ import {
 } from "./constants";
 import { CACHE_KEYS, cache } from "./cache";
 import { logError, scrollDown } from "./helpers/page.helper";
+import Papa from "papaparse";
+import _ from "lodash";
 
 chromium.use(stealth());
 
 let headerWritten = false;
 
-function appendCsv(pathStr: string, contents: any, cb?) {
-  const dirName = path.dirname(pathStr);
+function appendCsv(pathStr: string, jsonData: Record<string, any>[]) {
   const fileName = path.resolve(pathStr);
 
-  fs.mkdirSync(dirName, { recursive: true });
-  fs.appendFileSync(fileName, contents, cb);
+  const csv = Papa.unparse(jsonData, {
+    quotes: true, // Wrap every datum in quotes
+    header: !headerWritten, // Write header only if it's not written yet
+    skipEmptyLines: true, // Don't write empty lines
+  });
+
+  headerWritten = true; // Set header as written
+
+  fs.appendFileSync(fileName, csv);
+  fs.appendFileSync(fileName, "\r\n");
 
   return fileName;
 }
@@ -36,18 +45,6 @@ function appendCsv(pathStr: string, contents: any, cb?) {
 type StartCrawlTwitterParams = {
   twitterSearchUrl?: string;
 };
-
-function convertValuesToStrings(obj) {
-  const result = {};
-  for (const key in obj) {
-    if (typeof obj[key] === "object" && obj[key] !== null) {
-      result[key] = convertValuesToStrings(obj[key]); // Recursively convert nested object values
-    } else {
-      result[key] = `"${String(obj[key])}"`;
-    }
-  }
-  return result;
-}
 
 export type CrawlParams = {
   ACCESS_TOKEN: string;
@@ -232,14 +229,6 @@ export async function crawl({
 
           cache.set(CACHE_KEYS.GOT_TWEETS, true);
 
-          const headerRow = FILTERED_FIELDS.map((field) => `"${field}"`).join(",") + "\n";
-          const isAlreadyHaveHeader = fs.existsSync(FILE_NAME);
-
-          if (!headerWritten) {
-            headerWritten = true;
-            if (!isAlreadyHaveHeader) appendCsv(FILE_NAME, headerRow);
-          }
-
           const tweetContents = tweets
             .map((tweet) => {
               const isPromotedTweet = tweet.entryId.includes("promoted");
@@ -284,7 +273,7 @@ export async function crawl({
             console.info(chalk.green(`Created new directory: ${dirFullPath}`));
           }
 
-          const rows = comingTweets.reduce((prev: [], current: (typeof tweetContents)[0]) => {
+          const rows = comingTweets.map((current: (typeof tweetContents)[0]) => {
             const tweet = pick(current.tweet, FILTERED_FIELDS);
 
             const charsToReplace = ["\n", ",", '"', "⁦", "⁩", "’", "‘", "“", "”", "…", "—", "–", "•"];
@@ -316,15 +305,14 @@ export async function crawl({
             tweet["tweet_url"] = `https://twitter.com/${current.user.screen_name}/status/${tweet.id_str}`;
             tweet["image_url"] = current.tweet.entities?.media?.[0]?.media_url_https || "";
             tweet["location"] = current.user.location || "";
-            tweet["reply_to_username"] = current.tweet.in_reply_to_screen_name || "";
+            tweet["in_reply_to_screen_name"] = current.tweet.in_reply_to_screen_name || "";
 
-            const row = Object.values(convertValuesToStrings(tweet)).join(",");
+            return tweet;
+          });
 
-            return [...prev, row];
-          }, []);
+          const sortedArrayOfObjects = _.map(rows, (obj) => _.fromPairs(_.sortBy(Object.entries(obj), 0)));
 
-          const csv = (rows as []).join("\n") + "\n";
-          const fullPathFilename = appendCsv(FILE_NAME, csv);
+          const fullPathFilename = appendCsv(FILE_NAME, sortedArrayOfObjects);
 
           console.info(chalk.blue(`\n\nYour tweets saved to: ${fullPathFilename}`));
 
