@@ -24,7 +24,7 @@ export const FILTERED_FIELDS = [
   "conversation_id_str",
   "username",
   "tweet_url",
-  "in_reply_to_screen_name",
   "image_url",
   "location",
+  "in_reply_to_screen_name",
 ];

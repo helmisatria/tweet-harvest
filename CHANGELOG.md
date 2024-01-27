@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.5.3 (2024-01-27)
+
+### Changes
+
+- Fix: consistency of csv headers order
+- Feat: convert tweet-harvest csv to gephi format source,target
+
 ## 2.5.0 (2024-01-19)
 
 ### Changes
