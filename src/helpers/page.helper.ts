@@ -1,11 +1,21 @@
 import { Page } from "@playwright/test";
 import chalk from "chalk";
 
-export const scrollDown = async (page: Page): Promise<void> => {
+export const scrollUp = async (page: Page): Promise<void> => {
   await page.evaluate(() =>
     window.scrollTo({
       behavior: "smooth",
-      top: 10_000 * 9_000,
+      top: 0,
+    })
+  );
+};
+
+export const scrollDown = async (page: Page): Promise<void> => {
+  await page.evaluate(() =>
+    // scroll to the bottom of the page
+    window.scrollTo({
+      behavior: "smooth",
+      top: document.body.scrollHeight,
     })
   );
 

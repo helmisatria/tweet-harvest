@@ -17,7 +17,7 @@ import {
   TWITTER_SEARCH_ADVANCED_URL,
 } from "./constants";
 import { CACHE_KEYS, cache } from "./cache";
-import { logError, scrollDown } from "./helpers/page.helper";
+import { logError, scrollDown, scrollUp } from "./helpers/page.helper";
 import Papa from "papaparse";
 import _ from "lodash";
 
@@ -81,7 +81,8 @@ export async function crawl({
 
   const IS_DETAIL_MODE = CRAWL_MODE === "DETAIL";
   const IS_SEARCH_MODE = CRAWL_MODE === "SEARCH";
-  const TIMEOUT_LIMIT = 40;
+  const REACH_TIMEOUT_MAX = 3;
+  const TIMEOUT_LIMIT = 20;
 
   let MODIFIED_SEARCH_KEYWORDS = SEARCH_KEYWORDS;
 
@@ -155,6 +156,7 @@ export async function crawl({
 
     let timeoutCount = 0;
     let additionalTweetsCount = 0;
+    let reachTimeout = 0;
     // count how many rate limit exception got raised
     let rateLimitCount = 0;
 
@@ -163,7 +165,20 @@ export async function crawl({
     };
 
     async function scrollAndSave() {
-      while (allData.tweets.length < TARGET_TWEET_COUNT && timeoutCount < TIMEOUT_LIMIT) {
+      while (
+        allData.tweets.length < TARGET_TWEET_COUNT &&
+        (timeoutCount < TIMEOUT_LIMIT || reachTimeout < REACH_TIMEOUT_MAX)
+      ) {
+        if (timeoutCount > TIMEOUT_LIMIT && reachTimeout < REACH_TIMEOUT_MAX) {
+          reachTimeout++;
+          console.info(chalk.yellow(`Timeout reached ${reachTimeout} times, making sure again...`));
+          timeoutCount = 0;
+
+          await scrollUp(page);
+          await page.waitForTimeout(2000);
+          await scrollDown(page);
+        }
+
         // Wait for the next response or 3 seconds, whichever comes first
         const response = await Promise.race([
           // includes "SearchTimeline" because it's the endpoint for the search result
@@ -171,7 +186,7 @@ export async function crawl({
           page.waitForResponse(
             (response) => response.url().includes("SearchTimeline") || response.url().includes("TweetDetail")
           ),
-          page.waitForTimeout(800),
+          page.waitForTimeout(1500),
         ]);
 
         if (response) {
@@ -362,7 +377,7 @@ export async function crawl({
     await scrollAndSave();
 
     if (allData.tweets.length) {
-      console.info(`Already got ${allData.tweets.length} tweets, done scrolling...`);
+      console.info(`Got ${allData.tweets.length} tweets, done scrolling...`);
     } else {
       console.info("No tweets found for the search criteria");
     }
