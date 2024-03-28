@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.6.0 (2024-03-28)
+
+### Changes
+
+- Fix: add install playwright browser postinstall
+- Fix: use HiDPI browser
+- Fix: adjust scroll height
+- Fix: dynamic scroll based on page height
+
 ## 2.5.3 (2024-01-27)
 
 ### Changes

@@ -64,6 +64,9 @@ devDependencies:
   '@types/prompts':
     specifier: ^2.4.9
     version: 2.4.9
+  '@types/shelljs':
+    specifier: ^0.8.15
+    version: 0.8.15
   '@types/yargs':
     specifier: ^17.0.32
     version: 17.0.32
@@ -666,8 +669,19 @@ packages:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
     dev: true
 
+  /@types/glob@7.2.0:
+    resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
+    dependencies:
+      '@types/minimatch': 5.1.2
+      '@types/node': 18.16.3
+    dev: true
+
   /@types/lodash@4.14.202:
     resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
+    dev: true
+
+  /@types/minimatch@5.1.2:
+    resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
     dev: true
 
   /@types/minimist@1.2.5:
@@ -693,6 +707,13 @@ packages:
     dependencies:
       '@types/node': 18.16.3
       kleur: 3.0.3
+    dev: true
+
+  /@types/shelljs@0.8.15:
+    resolution: {integrity: sha512-vzmnCHl6hViPu9GNLQJ+DZFd6BQI2DBTUeOvYHqkWQLMfKAAQYMb/xAmZkTogZI/vqXHCWkqDRymDI5p0QTi5Q==}
+    dependencies:
+      '@types/glob': 7.2.0
+      '@types/node': 18.16.3
     dev: true
 
   /@types/strip-bom@3.0.0:

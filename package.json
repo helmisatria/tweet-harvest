@@ -1,7 +1,7 @@
 {
   "name": "tweet-harvest",
   "description": "A Twitter crawler helper with auth",
-  "version": "2.5.3",
+  "version": "2.6.0",
   "license": "MIT",
   "author": "Helmi Satria",
   "publishConfig": {
@@ -37,6 +37,7 @@
     "@types/lodash": "^4.14.202",
     "@types/papaparse": "^5.3.14",
     "@types/prompts": "^2.4.9",
+    "@types/shelljs": "^0.8.15",
     "@types/yargs": "^17.0.32",
     "pkg": "^5.8.1",
     "ts-node": "^10.9.2",
@@ -49,6 +50,7 @@
     "tweet-harvest-gephi": "dist/scripts/convert-source-target.js"
   },
   "scripts": {
+    "postinstall": "npx playwright install chromium",
     "start": "ts-node src/crawl.ts",
     "dev": "npx tsx src/dev.ts",
     "build": "tsup",
