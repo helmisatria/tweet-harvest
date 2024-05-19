@@ -142,9 +142,6 @@ export async function crawl({
 
     if (!isLoggedIn) {
       logError("Invalid twitter auth token. Please check your auth token");
-      if (DEBUG_MODE) {
-        debugger;
-      }
 
       return browser.close();
     }
