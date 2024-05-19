@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.6.1 (2024-05-20)
+
+### Changes
+
+- Fix: cookie domain changes from twitter.com to x.com
+
 ## 2.6.0 (2024-03-28)
 
 ### Changes

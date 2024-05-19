@@ -1,7 +1,7 @@
 {
   "name": "tweet-harvest",
   "description": "A Twitter crawler helper with auth",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "license": "MIT",
   "author": "Helmi Satria",
   "publishConfig": {
