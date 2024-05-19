@@ -111,7 +111,7 @@ export async function crawl({
         {
           name: "auth_token",
           value: ACCESS_TOKEN,
-          domain: "twitter.com",
+          domain: "x.com",
           path: "/",
           expires: -1,
           httpOnly: true,
@@ -142,6 +142,10 @@ export async function crawl({
 
     if (!isLoggedIn) {
       logError("Invalid twitter auth token. Please check your auth token");
+      if (DEBUG_MODE) {
+        debugger;
+      }
+
       return browser.close();
     }
 
@@ -204,7 +208,7 @@ export async function crawl({
             if ((await response.text()).toLowerCase().includes("rate limit")) {
               logError(`Error parsing response json: ${JSON.stringify(response)}`);
               logError(
-                `Most likely, you have already exceeded the Twitter rate limit. Read more on https://twitter.com/elonmusk/status/1675187969420828672.`
+                `Most likely, you have already exceeded the Twitter rate limit. Read more on https://x.com/elonmusk/status/1675187969420828672.`
               );
 
               // wait for rate limit window passed before retrying
@@ -317,7 +321,7 @@ export async function crawl({
 
             tweet["full_text"] = cleanTweetText;
             tweet["username"] = current.user.screen_name;
-            tweet["tweet_url"] = `https://twitter.com/${current.user.screen_name}/status/${tweet.id_str}`;
+            tweet["tweet_url"] = `https://x.com/${current.user.screen_name}/status/${tweet.id_str}`;
             tweet["image_url"] = current.tweet.entities?.media?.[0]?.media_url_https || "";
             tweet["location"] = current.user.location || "";
             tweet["in_reply_to_screen_name"] = current.tweet.in_reply_to_screen_name || "";

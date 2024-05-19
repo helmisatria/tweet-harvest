@@ -2,8 +2,8 @@ import dayjs from "dayjs";
 import path from "path";
 
 export const TWITTER_SEARCH_ADVANCED_URL = {
-  TOP: "https://twitter.com/search-advanced",
-  LATEST: "https://twitter.com/search-advanced?f=live",
+  TOP: "https://x.com/search-advanced",
+  LATEST: "https://x.com/search-advanced?f=live",
 };
 
 export const NOW = dayjs().format("DD-MM-YYYY HH-mm-ss");
