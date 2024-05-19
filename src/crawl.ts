@@ -111,7 +111,7 @@ export async function crawl({
         {
           name: "auth_token",
           value: ACCESS_TOKEN,
-          domain: "twitter.com",
+          domain: "x.com",
           path: "/",
           expires: -1,
           httpOnly: true,
