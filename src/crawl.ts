@@ -124,7 +124,7 @@ export async function crawl({
   });
 
   const page = await context.newPage();
-  page.setDefaultTimeout(60 * 1000);
+  page.setDefaultTimeout(1200 * 1000);
 
   listenNetworkRequests(page);
 
