@@ -322,7 +322,7 @@ export async function crawl({
             tweet["image_url"] = current.tweet.entities?.media?.[0]?.media_url_https || "";
             tweet["location"] = current.user.location || "";
             tweet["in_reply_to_screen_name"] = current.tweet.in_reply_to_screen_name || "";
-
+            tweet["like_count"] = current.tweet.favorite_count || 0;
             return tweet;
           });
 
