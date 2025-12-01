@@ -6,7 +6,7 @@ export const scrollUp = async (page: Page): Promise<void> => {
     window.scrollTo({
       behavior: "smooth",
       top: 0,
-    })
+    }),
   );
 };
 
@@ -16,7 +16,7 @@ export const scrollDown = async (page: Page): Promise<void> => {
     window.scrollTo({
       behavior: "smooth",
       top: document.body.scrollHeight,
-    })
+    }),
   );
 
   // delete element that have a that has deep child data-testid="tweetPhoto"

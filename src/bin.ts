@@ -28,12 +28,12 @@ function showWelcomeMessage() {
   console.log(
     chalk.blue("Research by ") +
       chalk.bold.blue("Helmi Satria") +
-      chalk.blue("\nUse it for Educational Purposes only!\n")
+      chalk.blue("\nUse it for Educational Purposes only!\n"),
   );
   console.log(
     chalk.yellow(
-      `This script uses Chromium Browser to crawl data from Twitter with ${chalk.bold("your Twitter auth token")}.`
-    )
+      `This script uses Chromium Browser to crawl data from Twitter with ${chalk.bold("your Twitter auth token")}.`,
+    ),
   );
   console.log(chalk.yellow("Please enter your Twitter auth token when prompted.\n"));
   console.log(chalk.red.bold("Note:") + " Keep your access token secret! Don't share it with anyone else.");

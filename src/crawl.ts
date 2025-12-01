@@ -95,7 +95,7 @@ export async function crawl({
 
   if (CSV_INSERT_MODE === "REPLACE" && fs.existsSync(FILE_NAME)) {
     console.info(
-      chalk.blue(`\nFound existing file ${FILE_NAME}, renaming to ${FILE_NAME.replace(".csv", ".old.csv")}`)
+      chalk.blue(`\nFound existing file ${FILE_NAME}, renaming to ${FILE_NAME.replace(".csv", ".old.csv")}`),
     );
     fs.renameSync(FILE_NAME, FILE_NAME.replace(".csv", ".old.csv"));
   }
@@ -185,7 +185,7 @@ export async function crawl({
           // includes "SearchTimeline" because it's the endpoint for the search result
           // or also includes "TweetDetail" because it's the endpoint for the tweet detail
           page.waitForResponse(
-            (response) => response.url().includes("SearchTimeline") || response.url().includes("TweetDetail")
+            (response) => response.url().includes("SearchTimeline") || response.url().includes("TweetDetail"),
           ),
           page.waitForTimeout(1500),
         ]);
@@ -205,7 +205,7 @@ export async function crawl({
             if ((await response.text()).toLowerCase().includes("rate limit")) {
               logError(`Error parsing response json: ${JSON.stringify(response)}`);
               logError(
-                `Most likely, you have already exceeded the Twitter rate limit. Read more on https://x.com/elonmusk/status/1675187969420828672.`
+                `Most likely, you have already exceeded the Twitter rate limit. Read more on https://x.com/elonmusk/status/1675187969420828672.`,
               );
 
               // wait for rate limit window passed before retrying
@@ -268,10 +268,12 @@ export async function crawl({
               const tweetContent = result.legacy || result.tweet.legacy;
               const userContent =
                 result.core?.user_results?.result?.legacy || result.tweet.core.user_results.result.legacy;
+              const userProfile = result.core?.user_results?.result?.core;
 
               return {
                 tweet: tweetContent,
                 user: userContent,
+                userProfile: userProfile,
               };
             })
             .filter((tweet) => tweet !== null);
@@ -292,16 +294,18 @@ export async function crawl({
           const rows = comingTweets.map((current: (typeof tweetContents)[0]) => {
             const tweet = pick(current.tweet, FILTERED_FIELDS);
 
-            const charsToReplace = ["\n", ",", '"', "⁦", "⁩", "’", "‘", "“", "”", "…", "—", "–", "•"];
-            let cleanTweetText = tweet.full_text.replace(new RegExp(charsToReplace.join("|"), "g"), " ");
+            // const charsToReplace = ["\n", ",", '"', "⁦", "⁩", "’", "‘", "“", "”", "…", "—", "–", "•"];
+            // let cleanTweetText = tweet.full_text.replace(new RegExp(charsToReplace.join("|"), "g"), " ");
+
+            let cleanTweetText = tweet.full_text;
 
             // replace all emojis
             // Emoji regex pattern
-            const emojiPattern =
-              /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
+            // const emojiPattern =
+            //   /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
 
             // Replace all instances of emojis in the string
-            cleanTweetText = cleanTweetText.replace(emojiPattern, "");
+            // cleanTweetText = cleanTweetText.replace(emojiPattern, "");
 
             // replace all double spaces with single space
             cleanTweetText = cleanTweetText.replace(/\s\s+/g, " ");
@@ -317,8 +321,8 @@ export async function crawl({
             }
 
             tweet["full_text"] = cleanTweetText;
-            tweet["username"] = current.user.screen_name;
-            tweet["tweet_url"] = `https://x.com/${current.user.screen_name}/status/${tweet.id_str}`;
+            tweet["username"] = current.userProfile?.screen_name;
+            tweet["tweet_url"] = `https://x.com/${current.userProfile?.screen_name}/status/${tweet.id_str}`;
             tweet["image_url"] = current.tweet.entities?.media?.[0]?.media_url_https || "";
             tweet["location"] = current.user.location || "";
             tweet["in_reply_to_screen_name"] = current.tweet.in_reply_to_screen_name || "";
@@ -405,9 +409,9 @@ export async function crawl({
       console.log(
         chalk.red(
           `\nIf you need help, please send this error screenshot to the maintainer, it was saved to "${path.resolve(
-            errorFilename
-          )}"`
-        )
+            errorFilename,
+          )}"`,
+        ),
       );
     });
   } finally {
