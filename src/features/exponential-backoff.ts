@@ -15,15 +15,13 @@ const ratio = 2;
 // when met a rate limit error.
 // Attempt start with `0`
 export const calculateForRateLimit = (attempt: number): number => {
-    // return base timeout if disabled
-    if (!ENABLE_EXPONENTIAL_BACKOFF) {
-        return baseTimeout;
-    }
+  // return base timeout if disabled
+  if (!ENABLE_EXPONENTIAL_BACKOFF) {
+    return baseTimeout;
+  }
 
-    const timeout = ratio * attempt * baseTimeout + baseTimeout;
+  const timeout = ratio * attempt * baseTimeout + baseTimeout;
 
-    // if timeout exceed maximum, return the maximum timeout
-    return timeout > maximumTimeout
-        ? maximumTimeout
-        : timeout;
-}
+  // if timeout exceed maximum, return the maximum timeout
+  return timeout > maximumTimeout ? maximumTimeout : timeout;
+};

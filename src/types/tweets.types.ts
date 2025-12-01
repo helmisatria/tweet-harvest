@@ -60,6 +60,11 @@ export interface User {
   has_graduated_access: boolean;
   is_blue_verified: boolean;
   profile_image_shape: string;
+  core : {
+    created_at : string;
+    name: string;
+    screen_name: string;
+  };
   legacy: {
     can_dm: boolean;
     can_media_tag: boolean;
