@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.7.0 (2025-12-15)
+
+### Added
+
+- **XLSX Export Support**: New `--export-format` or `-e` CLI option to export data as Excel (.xlsx) files in addition to CSV
+- Interactive prompt for selecting export format (CSV or Excel) when running without CLI arguments
+- ISO 8601 date format for `created_at` timestamps in exported data for better tool compatibility
+
+### Fixed
+
+- Username and display name extraction now properly uses the `core` object, ensuring correct values are returned
+- Improved text preservation - removed aggressive text cleaning that was stripping emojis and special characters
+- CSV escaping now handled properly by PapaParse library instead of manual character replacement
+
+### Changed
+
+- Updated multiple dependencies to latest versions:
+  - chalk: `^4.1.2` → `^5.6.2`
+  - commander: `^11.1.0` → `^14.0.2`
+  - dayjs: `^1.11.10` → `^1.11.19`
+  - dotenv: `^16.4.1` → `^16.6.1`
+  - papaparse: `^5.4.1` → `^5.5.3`
+  - yargs: `^17.7.2` → `^18.0.0`
+  - znv: `^0.3.2` → `^0.5.0`
+  - zod: `^3.22.4` → `^3.25.76`
+  - TypeScript: `^5.3.3` → `^5.9.3`
+  - @swc/core: `^1.3.106` → `^1.15.5`
+  - tsup: `^8.0.1` → `^8.5.1`
+- Pinned @playwright/test to `1.41.1` (removed caret)
+- Enhanced type definitions for `User` object with optional fields and `core` object
+- Refactored data appending logic for better code organization
+- Updated pnpm-lock.yaml to lockfile version 9.0
+
+### Removed
+
+- Removed `pkg` from devDependencies (no longer needed)
+
 ## 2.6.1 (2024-05-20)
 
 ### Changes
