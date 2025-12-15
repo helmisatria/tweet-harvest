@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { pick } from "lodash";
 import chalk from "chalk";
 import path from "path";
+import dayjs from "dayjs";
 import { Entry } from "./types/tweets.types";
 import { chromium } from "playwright-extra";
 import stealth from "puppeteer-extra-plugin-stealth";
@@ -19,11 +20,13 @@ import {
 import { CACHE_KEYS, cache } from "./cache";
 import { logError, scrollDown, scrollUp } from "./helpers/page.helper";
 import Papa from "papaparse";
+import * as XLSX from "xlsx";
 import _ from "lodash";
 
 chromium.use(stealth());
 
 let headerWritten = false;
+let xlsxData: Record<string, any>[] = [];
 
 function appendCsv(pathStr: string, jsonData: Record<string, any>[]) {
   const fileName = path.resolve(pathStr);
@@ -40,6 +43,28 @@ function appendCsv(pathStr: string, jsonData: Record<string, any>[]) {
   fs.appendFileSync(fileName, "\r\n");
 
   return fileName;
+}
+
+function appendXlsx(pathStr: string, jsonData: Record<string, any>[]) {
+  const fileName = path.resolve(pathStr);
+
+  // Accumulate data for xlsx (we'll write at the end or periodically)
+  xlsxData.push(...jsonData);
+
+  // Write/update xlsx file
+  const worksheet = XLSX.utils.json_to_sheet(xlsxData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Tweets");
+  XLSX.writeFile(workbook, fileName);
+
+  return fileName;
+}
+
+function appendData(pathStr: string, jsonData: Record<string, any>[], format: "csv" | "xlsx") {
+  if (format === "xlsx") {
+    return appendXlsx(pathStr, jsonData);
+  }
+  return appendCsv(pathStr, jsonData);
 }
 
 type StartCrawlTwitterParams = {
@@ -59,6 +84,7 @@ export type CrawlParams = {
   TWEET_THREAD_URL?: string;
   SEARCH_TAB?: "LATEST" | "TOP";
   CSV_INSERT_MODE?: "REPLACE" | "APPEND";
+  EXPORT_FORMAT?: "csv" | "xlsx";
 };
 
 export async function crawl({
@@ -75,6 +101,7 @@ export async function crawl({
   OUTPUT_FILENAME,
   SEARCH_TAB = "LATEST",
   CSV_INSERT_MODE = "REPLACE",
+  EXPORT_FORMAT = "csv",
 }: CrawlParams) {
   const CRAWL_MODE = TWEET_THREAD_URL ? "DETAIL" : "SEARCH";
   const SWITCHED_SEARCH_TAB = SEARCH_TAB === "TOP" ? "LATEST" : "TOP";
@@ -88,16 +115,20 @@ export async function crawl({
 
   const CURRENT_PACKAGE_VERSION = require("../package.json").version;
 
-  const filename = (OUTPUT_FILENAME || `${SEARCH_KEYWORDS} ${NOW}`).trim().replace(".csv", "");
-  const FILE_NAME = `${FOLDER_DESTINATION}/${filename}.csv`.replace(/ /g, "_").replace(/:/g, "-");
+  // Reset state for new crawl
+  headerWritten = false;
+  xlsxData = [];
+
+  const fileExtension = EXPORT_FORMAT === "xlsx" ? "xlsx" : "csv";
+  const filename = (OUTPUT_FILENAME || `${SEARCH_KEYWORDS} ${NOW}`).trim().replace(/\.(csv|xlsx)$/, "");
+  const FILE_NAME = `${FOLDER_DESTINATION}/${filename}.${fileExtension}`.replace(/ /g, "_").replace(/:/g, "-");
 
   console.info(chalk.blue("\nOpening twitter search page...\n"));
 
   if (CSV_INSERT_MODE === "REPLACE" && fs.existsSync(FILE_NAME)) {
-    console.info(
-      chalk.blue(`\nFound existing file ${FILE_NAME}, renaming to ${FILE_NAME.replace(".csv", ".old.csv")}`)
-    );
-    fs.renameSync(FILE_NAME, FILE_NAME.replace(".csv", ".old.csv"));
+    const oldFileName = FILE_NAME.replace(`.${fileExtension}`, `.old.${fileExtension}`);
+    console.info(chalk.blue(`\nFound existing file ${FILE_NAME}, renaming to ${oldFileName}`));
+    fs.renameSync(FILE_NAME, oldFileName);
   }
 
   let TWEETS_NOT_FOUND_ON_CURRENT_TAB = false;
@@ -266,8 +297,12 @@ export async function crawl({
               if (!result.tweet?.core?.user_results && !result.core?.user_results) return null;
 
               const tweetContent = result.legacy || result.tweet.legacy;
-              const userContent =
-                result.core?.user_results?.result?.legacy || result.tweet.core.user_results.result.legacy;
+              const userResult = result.core?.user_results?.result || result.tweet.core.user_results.result;
+              const userContent = {
+                ...userResult.legacy,
+                screen_name: userResult.core?.screen_name,
+                name: userResult.core?.name,
+              };
 
               return {
                 tweet: tweetContent,
@@ -292,19 +327,13 @@ export async function crawl({
           const rows = comingTweets.map((current: (typeof tweetContents)[0]) => {
             const tweet = pick(current.tweet, FILTERED_FIELDS);
 
-            const charsToReplace = ["\n", ",", '"', "⁦", "⁩", "’", "‘", "“", "”", "…", "—", "–", "•"];
-            let cleanTweetText = tweet.full_text.replace(new RegExp(charsToReplace.join("|"), "g"), " ");
+            // Convert Twitter's created_at to ISO 8601 format
+            if (tweet.created_at) {
+              tweet.created_at = dayjs(tweet.created_at).toISOString();
+            }
 
-            // replace all emojis
-            // Emoji regex pattern
-            const emojiPattern =
-              /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
-
-            // Replace all instances of emojis in the string
-            cleanTweetText = cleanTweetText.replace(emojiPattern, "");
-
-            // replace all double spaces with single space
-            cleanTweetText = cleanTweetText.replace(/\s\s+/g, " ");
+            // Keep original text - PapaParse handles CSV escaping (quotes, commas, newlines)
+            let cleanTweetText = tweet.full_text;
 
             if (IS_DETAIL_MODE) {
               const firstWord = cleanTweetText.split(" ")[0];
@@ -328,7 +357,7 @@ export async function crawl({
 
           const sortedArrayOfObjects = _.map(rows, (obj) => _.fromPairs(_.sortBy(Object.entries(obj), 0)));
 
-          const fullPathFilename = appendCsv(FILE_NAME, sortedArrayOfObjects);
+          const fullPathFilename = appendData(FILE_NAME, sortedArrayOfObjects, EXPORT_FORMAT);
 
           console.info(chalk.blue(`\n\nYour tweets saved to: ${fullPathFilename}`));
 
