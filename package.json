@@ -1,7 +1,7 @@
 {
   "name": "tweet-harvest",
   "description": "A Twitter crawler helper with auth",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "license": "MIT",
   "author": "Helmi Satria",
   "publishConfig": {
@@ -39,7 +39,6 @@
     "@types/papaparse": "^5.5.2",
     "@types/prompts": "^2.4.9",
     "@types/yargs": "^17.0.35",
-    "pkg": "^5.8.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsup": "^8.5.1",
