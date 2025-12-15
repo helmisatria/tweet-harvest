@@ -21,7 +21,8 @@ program
   .addOption(new Option("-l, --limit <number>", "Limit number of tweets to crawl").argParser(parseInt))
   .addOption(new Option("-d, --delay <number>", "Delay between each tweet (in seconds)").default(3).argParser(parseInt))
   .addOption(new Option("-o, --output-filename <type>", "Output filename"))
-  .addOption(new Option("--tab <type>", "Search tab").choices(["TOP", "LATEST"]).default("TOP"));
+  .addOption(new Option("--tab <type>", "Search tab").choices(["TOP", "LATEST"]).default("TOP"))
+  .addOption(new Option("-e, --export-format <type>", "Export format").choices(["csv", "xlsx"]).default("csv"));
 
 function showWelcomeMessage() {
   console.log(chalk.bold.green(`Tweet Harvest [v${version}]\n`));
@@ -80,6 +81,19 @@ async function main() {
   }
 
   if (needPrompts) {
+    questions.push({
+      type: "select",
+      name: "exportFormat",
+      message: "What format do you want to export?",
+      choices: [
+        { title: "CSV", value: "csv" },
+        { title: "Excel (XLSX)", value: "xlsx" },
+      ],
+      initial: 0,
+    });
+  }
+
+  if (needPrompts) {
     const answers = await prompts(questions, {
       onCancel: () => {
         console.info("Exiting...");
@@ -101,6 +115,7 @@ async function main() {
       DELAY_EACH_TWEET_SECONDS: options.delay,
       OUTPUT_FILENAME: options.outputFilename,
       SEARCH_TAB: options.tab.toUpperCase(),
+      EXPORT_FORMAT: options.exportFormat.toLowerCase(),
     });
   } catch (err) {
     console.error("Error running script:", err);
