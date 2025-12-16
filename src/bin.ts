@@ -15,7 +15,7 @@ program.name("npx tweet-harvest").version(version);
 program
   .addOption(new Option("-t, --token <type>", "Twitter auth token"))
   .addOption(new Option("-f, --from <type>", "From date (DD-MM-YYYY)"))
-  .addOption(new Option("-to, --to <type>", "To date (DD-MM-YYYY)"))
+  .addOption(new Option("--to <type>", "To date (DD-MM-YYYY)"))
   .addOption(new Option("-s, --search-keyword <type>", "Search keyword"))
   .addOption(new Option("--thread <type>", "Tweet thread URL"))
   .addOption(new Option("-l, --limit <number>", "Limit number of tweets to crawl").argParser(parseInt))

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.1 (2025-12-16)
+
+### Fixed
+
+- Removed ambiguous `-to` short option from the `--to` CLI flag to prevent command-line parsing conflicts
+
 ## 2.7.0 (2025-12-15)
 
 ### Added
